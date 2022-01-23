@@ -11,7 +11,7 @@ async function connect() {
 	}
 
 	await mongoose.connect(connString, {
-		dbName: process.env.MONGODB_SCHEMA || "lims",
+		dbName: process.env.MONGODB_SCHEMA,
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 	});
