@@ -7,6 +7,8 @@ const cors = require('cors');
 const express = require('express');
 const database = require('./database');
 const bodyParser = require('body-parser');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocs = require('./swagger.json')
 //const compression = require('compression');
 require('dotenv').config()
 
@@ -40,6 +42,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: REQ_SIZE_LIMIT }));
 // Handlers
 app.use('/health', health); // global health reporter for k8s
 app.use('/v1', API_v1); // main API v1
+app.use('/documentation',swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 app.use(errorHandler); // global error handler, fallbacks to 500
 app.use(notFound); // fallback to 404
 

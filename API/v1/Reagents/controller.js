@@ -11,7 +11,7 @@ exports.post = async (req, res, next) => {
 	// 		throw BADREQUEST;
 	// 	}
 
-		const user = "ricardo";
+		const user = req.body.user;
 
 
 		const result = await create(req.body, user, Reagents);

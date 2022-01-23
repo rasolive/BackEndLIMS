@@ -1,0 +1,161 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "tilte": "Api de Manipulação de produtos",
+        "description": "manipulação do banco de dados do LIMS",
+        "contact": {
+            "email": "rasolive@hotmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8089/v1",
+            "description": "Url Local DEV"
+        },
+        {
+            "url": "inserir url prd",
+            "description": "Url Local PRD"
+        }
+    ],
+    "paths": {
+        "/health": {
+            "get": {
+                "summary": "Teste da aplicação",
+                "description": "Essa rota realiza teste da aplicação",
+                "tags": [
+                    "Health"
+                ],"responses": {
+                        "400": {
+                            "description": "Não foi possivel criar"
+                        },
+                        "200": {
+                            "description": "ok"
+                        }
+                }
+            }
+         } ,
+        "/reagents": {
+            "post": {
+                "summary": "Cadastro de Reagentes",
+                "description": "Essa rota realiza o cadstro de Reagentes no Banco",
+                "tags": [
+                    "Reagentes"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Reagents"
+                            },
+                            "examples": {
+                                "reagent": {
+                                    "value": {
+                                        "_id": 11,
+                                        "active": true,
+                                        "cod": 2525,
+                                        "name": "H2SO4",
+                                        "user": "Nome do Usuario"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    },"responses": {
+                        "400": {
+                            "description": "Não foi possivel criar"
+                        },
+                        "200": {
+                            "description": "ok"
+                        }
+                }
+            },
+            "get": {
+                "summary": "Busca de Reagentes Cadastrados",
+                "description": "Essa rota realiza a de Reagentes no Banco",
+                "tags": [
+                    "Reagentes"
+                ],
+                "responses": {
+                        "400": {
+                            "description": "Não foi possivel criar"
+                        },
+                        "200": {
+                            "description": "ok"
+                        }
+                }
+            }
+        },
+        "/reagents/{_id}": {
+            "put": {
+                "summary": "Atualização de dados de Reagentes",
+                "description": "Essa rota realiza atualização de Reagentes no Banco",
+                "tags": [
+                    "Reagentes"
+                ],
+                "parameters": [{
+
+                    "name": "_id",
+                    "in": "path",
+                    "description":"ID do reagente a ser alterado",
+                    "required": true
+
+                    }],
+                    "requestBody": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Reagents"
+                                },
+                                "examples": {
+                                    "reagent": {
+                                        "value": {
+                                            "active": true,
+                                            "cod": 5555,
+                                            "name": "H2SO4",
+                                            "user": "Nome do Usuario"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "400": {
+                            "description": "Não foi possivel criar"
+                        },
+                        "200": {
+                            "description": "ok"
+                        }
+                }
+            }
+    }},
+    "components": {
+        "schemas": {
+            "Reagents": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
+                    },
+                    "cod": {
+                        "type": "Number"
+                    },
+                    "name": {
+                        "type": "String"
+                    },
+                    "user": {
+                        "type": "String"
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
