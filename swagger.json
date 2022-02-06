@@ -55,6 +55,7 @@
                                         "active": true,
                                         "cod": 2525,
                                         "name": "H2SO4",
+                                        "aparence": "Sólido",
                                         "user": "Nome do Usuario"
                                     }
                                 }
@@ -114,6 +115,7 @@
                                             "active": true,
                                             "cod": 5555,
                                             "name": "H2SO4",
+                                            "aparence": "Sólido",
                                             "user": "Nome do Usuario"
                                         }
                                     }
@@ -146,6 +148,9 @@
                         "type": "Number"
                     },
                     "name": {
+                        "type": "String"
+                    },
+                    "aparence": {
                         "type": "String"
                     },
                     "user": {
