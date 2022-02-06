@@ -10,6 +10,7 @@ const Reagents = new Schema({
 	active: Boolean,
 	cod: Number,
 	name: String,
+	aparence: String,
 	table: {type: Array, default: {} },
 	specie_id: { type: Number, ref: "schema" },
     fields: { type: Object, default: {}},
