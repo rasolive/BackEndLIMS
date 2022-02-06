@@ -5,11 +5,6 @@ const { errorLog } = require('../../../Globals/utils');
 
 // POST
 exports.post = async (req, res, next) => {
-	// try {
-	// 	const validate = [ res.session.user ];
-	// 	if (!validate.every(item => Boolean(item) === true)) {
-	// 		throw BADREQUEST;
-	// 	}
 
 		const user = req.body.user;
 
@@ -25,23 +20,11 @@ exports.post = async (req, res, next) => {
 		} else {
 			throw errorLog("Não foi possivel criar", INTERNALSERVERERROR);
 		}
-
-	// } catch (error) {
-	// 	return (
-	// 		next(errorLog("post.catch", (error && error.status) ? error : INTERNALSERVERERROR))
-	// 	)
-	// }
 }
 
 // PUT
 exports.put = async (req, res, next) => {
 
-	// const validate = [ res.session.user ];
-	// if (!validate.every(item => Boolean(item) === true)) {
-	// 	throw BADREQUEST;
-	// }
-
-	Object.assign(req.body, { user: "Ricardo" })
 
 	const returnList = await update(req.params.id, req.body, Reagents);
 
@@ -112,8 +95,6 @@ exports.deleteById = async (req, res, next) => {
 		if (!validate.every(item => Boolean(item) === true)) {
 			throw BADREQUEST;
 		}
-
-		Object.assign(req.body, { user: "Ricardo" })
 
 		const returnList = await remove(req.params.id, req.body, Reagents);
 
