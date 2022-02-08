@@ -96,6 +96,7 @@ exports.deleteById = async (req, res, next) => {
 			throw BADREQUEST;
 		}
 
+		Object.assign(req.body, {user: "Usuário de alteração"})
 		const returnList = await remove(req.params.id, req.body, Reagents);
 
 		if (returnList) {

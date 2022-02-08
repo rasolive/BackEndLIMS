@@ -2,7 +2,7 @@ const update = require('../../repositories/mongoDB/update')
 const { handleReturnDB, errorLog, objectIsEmpty } = require('../../Globals/utils')
 const { BADREQUEST, INTERNALSERVERERROR } = require('./../../Globals/httpErros')
 
-const DBdelelete = async (id, options = {}, Model) => {
+const DBdelete = async (id, options = {}, Model) => {
 try {
     const validate = [
         Model,
@@ -26,4 +26,4 @@ try {
     }
 }
 
-module.exports = DBdelelete
+module.exports = DBdelete

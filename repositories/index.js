@@ -4,7 +4,7 @@ const DBfindOne = require('./mongoDB/findOne')
 const DBfindById = require('./mongoDB/findById')
 const DBfindList = require('./mongoDB/findList')
 const DBupdate = require('./mongoDB/update')
-const DBdelelete = require('./mongoDB/delete')
+const DBdelete = require('./mongoDB/delete')
 
 
 const repositorie = Object.assign({}, {
@@ -14,7 +14,7 @@ const repositorie = Object.assign({}, {
     findById: DBfindById,
     findList: DBfindList,
     update: DBupdate,
-    remove: DBdelelete
+    remove: DBdelete
 })
 
 module.exports = repositorie
