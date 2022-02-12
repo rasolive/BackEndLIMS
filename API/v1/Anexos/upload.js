@@ -87,13 +87,13 @@ module.exports.post = async (req, res, next) => {
       throw { status: 500, message: "internal server error" };
     }    
     
-    // const inserted = await tryInsertInWorkflowArchive("user", archiveFullData, [environment])
-    // if (!inserted || inserted.status >= 400) throw inserted;
+    const inserted = "ok"//await tryInsertInWorkflowArchive("user", archiveFullData, [environment])
+    if (!inserted || inserted.status >= 400) throw inserted;
 
     // const Tree = await makeTreeUri(inserted.message, session.user, environment)
     // if (!Tree || Tree.status >= 400) throw Tree;
     
-    // return res.send(inserted)
+    return res.send(inserted)
   } catch (err) {
     console.error(err);
     next(err);
