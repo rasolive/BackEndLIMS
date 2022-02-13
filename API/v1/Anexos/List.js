@@ -4,7 +4,7 @@ const { Storage } = require('@google-cloud/storage');
 exports.list = async (req, res, next) => {
 
     const path = req.body.gcpPatch
-    console.log(path)
+    // console.log(path)
   
     try {        
         const bucketName = process.env.GCP_BUCKET_NAME;
@@ -14,13 +14,16 @@ exports.list = async (req, res, next) => {
         });        
             
         const [files] = await storage.bucket(bucketName).getFiles({ prefix: path });
-
-        console.log('Files:');
+        // console.log(files)
+        // console.log('Files:');
+        // files.forEach(file => {
+        // console.log(file.name);              
+        // })
         files.forEach(file => {
-        console.log(file.name);
-        return [files];
-                             
-        })
+            file.path = path              
+            })
+
+        return res.json(files).end();
         
         } catch (err) {
             console.log(err)
