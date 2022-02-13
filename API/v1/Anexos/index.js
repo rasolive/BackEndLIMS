@@ -10,10 +10,10 @@ var upload = multer();
 const { post } = require('./upload');
 const { download } = require('./download');
 const { list } = require('./List');
-
-
+const { deleteFile } = require('./Delete')
 router.get('/download', download);
 router.post('/list', list);
+router.post('/delete', deleteFile);
 
 router.post(
     '/upload',
