@@ -13,8 +13,11 @@ exports.deleteFile = async (req, res, next) => {
             credentials: JSON.parse(process.env.GCP_CONFIG_PATH), 
         });        
             
-        await storage.bucket(bucketName).file(fileName).delete();
+        const response = await storage.bucket(bucketName).file(fileName).delete();
+
         console.log(`gs://${bucketName}/${fileName} deleted`);
+
+        return res.send(`${fileName} deleted`)
         
     } catch (err) {
        
