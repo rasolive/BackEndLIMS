@@ -129,7 +129,7 @@ const sendFileToStorage = async (
     // Implement file upload to storage
     const time = metadata.time;
     const bucket = storage.bucket(bucketName);
-     const finalPathName = `${(path ? path +'/': '')}${time}_${file.originalname}`;
+    const finalPathName = `${(path ? path +'/': '')}${file.originalname}`;
     const blob = bucket.file(`${finalPathName}`);
     
     const blobStream = blob.createWriteStream({

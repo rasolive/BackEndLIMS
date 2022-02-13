@@ -9,9 +9,11 @@ var upload = multer();
 
 const { post } = require('./upload');
 const { download } = require('./download');
+const { list } = require('./List');
 
 
 router.get('/download', download);
+router.post('/list', list);
 
 router.post(
     '/upload',
