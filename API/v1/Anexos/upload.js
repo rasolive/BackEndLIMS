@@ -1,15 +1,6 @@
 const { Storage } = require('@google-cloud/storage');
-//const { WorkflowArchive } = require('./model')
-//const { makeTreeUri } = require('./tree')
 const moment = require('moment')
-//const { axios, geralConfigDB } = require('../../../Globals/axiosConfig')
 const axios = require('axios');
-
-/**@todo: create route and search for Equipaments with axios in general-config-db */
-/**@todo: implement search with axios and remove model 'Equipaments' */
-// const Project = require('../Projects/model')
-// const Equipaments = require('../Equipments/model')
-
 require('dotenv').config()
 
 var multer = require('multer');
@@ -30,26 +21,11 @@ const propsToCreateBlacklist = {
   maxSize: (MB * 1024),
 }
 
-const checkEquipmentExists = (archiveFullData) => {
-  if (archiveFullData.equipament) return archiveFullData.equipament
-
-  if (archiveFullData.path.includes('/')) {
-    const basePathSplit = archiveFullData.path.split('/');
-    return basePathSplit.length > 1 ? basePathSplit[1] : null
-  }      
-}
-
 module.exports.post = async (req, res, next) => {
   upload.array()
 
   try {
-    //const { session } = res;
-   // const AUTH_TOKEN = req.query.token
-   	const { Hostname } = req.body;
-    //const { user, accessLevel } = session;
     const { files } = req.files.length ? req : req.body;
-
-    //if (!AUTH_TOKEN) throw { status: 401, message: "Unauthorized" };
     if (!files || files.length === 0) throw { status: 400, message: "Bad Request" };
 
     const archiveFullData = req.body.archiveFullData ? JSON.parse(req.body.archiveFullData) : null
@@ -58,41 +34,22 @@ module.exports.post = async (req, res, next) => {
     const metadata = getMetaData(files)
     let basePath = await getBasePath(archiveFullData)
 
-    Object.assign(metadata, { hostname: Hostname });
     Object.assign(metadata, { basePath });       
-    Object.assign(archiveFullData, { equipament: checkEquipmentExists(archiveFullData) || null });
+
     Object.assign(archiveFullData, { metadata });
     
     // •••••••••• ---------- Blacklists ---------- •••••••••• //
     Object.assign(propsToCreateBlacklist, { label: archiveFullData.metadata.basePath });
-    const tryCreateBlacklist = await postWorkflowsBlackLists(propsToCreateBlacklist)
-
-    // const Blacklists = await getWorkflowsBlackLists(archiveFullData.metadata.basePath)
-    // if (!Blacklists || !Blacklists.data || Blacklists.status >= 400) {
-    //   throw { status: 401, message: `Unauthorized1 - ${Blacklists.data ? Blacklists.data : null}` }
-    // }
-
-    //const { extBlackList, maxSize } = Blacklists.data
-    //const isBlacklist = extBlackList.includes(archiveFullData.metadata.ext)
-    //const isMaxSize = archiveFullData.metadata.size > maxSize
-
-    //if (isBlacklist) throw { status: 401, message: "Unauthorized2 -  - isBlacklist - file extension not allowed" }    
-    //if (isMaxSize) throw { status: 401, message: "Unauthorized3 - isMaxSize - file size not allowed" }
-    // •••••••••• ---------- ••••• ---------- •••••••••• //
 
     const uploadFileResult = await tryUploadFileToStorage(files, archiveFullData); // « TO DO: add timestamp at send files
-    const environment = Hostname === 'frontend' ? 'final' : 'staging'
 
     if(!Boolean(uploadFileResult)) {
       throw { status: 500, message: "internal server error" };
     }    
     
-    const inserted = "ok"//await tryInsertInWorkflowArchive("user", archiveFullData, [environment])
+    const inserted = "ok"
     if (!inserted || inserted.status >= 400) throw inserted;
 
-    // const Tree = await makeTreeUri(inserted.message, session.user, environment)
-    // if (!Tree || Tree.status >= 400) throw Tree;
-    
     return res.send(inserted)
   } catch (err) {
     console.error(err);
@@ -100,48 +57,6 @@ module.exports.post = async (req, res, next) => {
   }
 
 };
-
-// •••••••••• ---------- getWorkflowsBlackLists ---------- •••••••••• //
-/**@todo criar e aplicar na pasta requests */
-const getWorkflowsBlackLists = async (basePath, AUTH_TOKEN) => {            
-  try {
-    const returnList = await geralConfigDB({
-      method: 'get',
-      url: `/blackLists?token=${AUTH_TOKEN}&group=workflow&label=${basePath}`,          
-    });
-
-    if (!returnList.data) throw { status: 401, message: "Unauthorized4 - The list of allowed extensions was not found." }
-     return returnList
-  } catch (err) {
-    if (axios.isAxiosError(err)) {
-      console.error('Axios error:',axios.isAxiosError(err),err.response.data);
-      return err.response;
-    }
-    return err
-  }
-}
-
-// •••••••••• ---------- postWorkflowsBlackLists ---------- •••••••••• //
-/**@todo criar e aplicar na pasta requests */
-const postWorkflowsBlackLists = async (props, AUTH_TOKEN) => {            
-  try {    
-
-    const returnList = await geralConfigDB({
-        method: 'POST',
-        url: `/blackLists?token=${AUTH_TOKEN}`,        
-        data: props
-    });
-
-    if (!returnList.data) throw { status: 401, message: "Unauthorized5 - The list of allowed extensions was not found." }
-     return returnList
-  } catch (err) {
-    if (axios.isAxiosError(err)) {
-      console.error('Axios error:',axios.isAxiosError(err));
-      return err.response;
-    }
-    return err
-  }
-}
 
 // •••••••••• ---------- getMetaData ---------- •••••••••• //
 const getMetaData = (files) => {
@@ -169,21 +84,18 @@ const getMetaData = (files) => {
 }
 
 // •••••••••• ---------- getFileURI ---------- •••••••••• //
-const getFileURI = (basePath = '', projectName, equipamentName) => {  
+const getFileURI = (basePath = '') => {  
   if (Boolean(basePath)) return basePath 
-  return Boolean(equipamentName) ? `${projectName}/${equipamentName}` : projectName    
-};
+ };
 
 // •••••••••• ---------- getBasePath ---------- •••••••••• //
 const getBasePath = async (archiveFullData) => {
 
   if (!archiveFullData) return '';
-   
-  const projectName = archiveFullData.project;
-  const equipamentName = archiveFullData.equipament || checkEquipmentExists(archiveFullData) || null;
+
   const path = archiveFullData.path || null
   
-  let basePath = getFileURI(path, projectName, equipamentName);
+  let basePath = getFileURI(path);
   
   if (path) {
     archiveFullData.folder = path.includes('/') ? path.split('/') : [path]
@@ -217,13 +129,8 @@ const sendFileToStorage = async (
     // Implement file upload to storage
     const time = metadata.time;
     const bucket = storage.bucket(bucketName);
-    // const finalPathName = `${(path ? path +'/': '')}${time}_${file.originalname.replace(/ /g, '_')}`;
-    const finalPathName = `${(path ? path +'/': '')}${time}_${file.originalname}`;
-    // const blob = bucket.file(finalPathName);
-
-    const environment = metadata.hostname === 'frontend' ? 'final' : 'staging'
-    const blob = bucket.file(`${environment}/${finalPathName}`);
-    // const blob = bucket.file(`${finalPathName}`);
+     const finalPathName = `${(path ? path +'/': '')}${time}_${file.originalname}`;
+    const blob = bucket.file(`${finalPathName}`);
     
     const blobStream = blob.createWriteStream({
       resumable: false,
@@ -251,9 +158,6 @@ const tryUploadFileToStorage = async (files,archiveFullData) => {
   if(!Boolean(files) || !Boolean(archiveFullData)) {
     return { status: 400, message: "Bad request" };
   }
-
-  const equipamentName = archiveFullData.equipament;
-  const projectName = archiveFullData.project;
   const basePath =  archiveFullData.metadata.basePath
 
   let filesToUpload = [];
@@ -266,7 +170,7 @@ const tryUploadFileToStorage = async (files,archiveFullData) => {
 
       filesToUpload.push({
         file,
-        URI: getFileURI(basePath, projectName, equipamentName),
+        URI: getFileURI(basePath),
       });
     }
 
@@ -296,61 +200,3 @@ const tryUploadFileToStorage = async (files,archiveFullData) => {
 
 }
 
-// •••••••••• ---------- tryInsertInWorkflowArchive ---------- •••••••••• //
-const tryInsertInWorkflowArchive = async (user, archiveFullData, environment = ['staging']) => {
-  
-  if(!user || !archiveFullData) {
-    return { status: 400, message: "Bad Request" };
-  }
-  
-  const projectName = archiveFullData.project;
-  const equipamentName = archiveFullData.equipament || null;
-  const metadata =  archiveFullData.metadata
-  const hostname = archiveFullData.metadata.hostname
-  const basePath =  archiveFullData.metadata.basePath
-  const time = metadata.time;
-  
-  delete archiveFullData.metadata.basePath  
-  delete archiveFullData.metadata.hostname
-  
-  /**@todo: create route and search for Equipaments and Projects with axios in general-config-db */
-  /**@todo: implement search with axios and remove model 'Equipaments' and 'Projects' */
-  const resultProjectSearch =  await Project.findOne( "projectName" ,{ _id: 1 });
-  const resultEquipamentsSearch =  equipamentName ? await Equipaments.findOne({ nameEquipment: equipamentName },{ _id: 1 }) : null
-  
-  const lastRow = await WorkflowArchive.findOne().sort({ _id: -1 });
-  const _id = lastRow ? lastRow._id + 1 : 1;
-
-  const workflowArchive = new WorkflowArchive({
-    _id,
-    active: true,
-    environment, // « Recursividade
-    project: projectName,
-    projectId: resultProjectSearch ? resultProjectSearch._id : null,
-    equipament: equipamentName || null,
-    equipamentId: resultEquipamentsSearch ? resultEquipamentsSearch.id : null,
-    hostname: hostname,
-    URI: basePath,
-    fullName: `${time}_${metadata.originalname}`,
-    metadata,
-    createdBy: user,
-    updatedBy: user,
-  });
-  try {    
-    const result = await workflowArchive.save();    
-    
-    if (result && result._id) {
-      const completeURI = `${result.URI}/${result.fullName}`
-      return { status: 200, message: completeURI };
-    } else {
-      return { status: 500, message: `A:: ${err.message}` }
-    }
-  } catch (err) {
-    if(err.message.includes('E11000')) /* dup key */ {
-      console.error('\ntry again: '+metadata.originalname);
-      return await tryInsertInWorkflowArchive(user, archiveFullData, environment)
-      
-    }
-    return { status: 500, message: `B:: ${err.message}` }
-  }
-}
