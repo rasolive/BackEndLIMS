@@ -3,21 +3,13 @@ const { Storage } = require('@google-cloud/storage');
 
 exports.download = async (req, res, next) => {
 
-    if (!req.query.path) throw { status: 400, message: 'Bad request' }
+    if (!req.body.path) throw { status: 400, message: 'Bad request' }
 
-    let pathCloud = req.query.path
+    let pathCloud = req.body.path
     
-    while(pathCloud.includes('%20')) {
-        pathCloud = pathCloud.replace('%20',' ')
-    }
-    while(pathCloud.includes('%C3%B5')) {
-        pathCloud = pathCloud.replace('%C3%B5','õ')
-    }
-    
-    pathCloud = pathCloud.includes('/') ? pathCloud.split('/') : [pathCloud]
-    let fullName = pathCloud.pop()
-    pathCloud.push(fullName)
-    pathCloud = pathCloud.join('/')    
+   
+    let fullName = pathCloud
+ 
 
     try {        
         const bucketName = process.env.GCP_BUCKET_NAME;
