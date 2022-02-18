@@ -6,5 +6,6 @@ router.use('/health', require('../../Globals/health'));
 
 router.use('/reagents', require('./Reagents'));
 router.use('/anexos', require('./Anexos'));
+router.use('/lotes', require('./lotes'));
 
 module.exports = router;
