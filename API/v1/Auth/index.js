@@ -2,10 +2,13 @@
 
 const router = require('express').Router();
 
-const { getList, getById, post, put, deleteById, authenticate } = require('./controller');
+const { getList, getById, post, put, deleteById, authenticate,findUser } = require('./controller');
 
 // Authenticate
 router.post('/authenticate', authenticate);
+
+// findUser
+router.post('/finduser', findUser);
 
 // GET list
 router.get('/', getList);

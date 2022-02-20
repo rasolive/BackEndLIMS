@@ -6,7 +6,7 @@ const { errorLog } = require('../../../Globals/utils');
 // POST
 exports.post = async (req, res, next) => {
 
-		const user = req.body.user;
+		const user = req.user.email;
 
 
 		const result = await create(req.body, user, Reagents);
@@ -24,9 +24,12 @@ exports.post = async (req, res, next) => {
 
 // PUT
 exports.put = async (req, res, next) => {
+	
+	const body = req.body
 
+    body.user = req.user.email
 
-	const returnList = await update(req.params.id, req.body, Reagents);
+	const returnList = await update(req.params.id, body, Reagents);
 
 	try {
 		if (returnList) {
@@ -48,7 +51,7 @@ exports.getList = async (req, res, next) => {
 
 		const returnList = await findList({}, Reagents);
 
-		return res.json(returnList).end();
+		return res.json({returnList, user: req.user}).end();
 
 	} catch (error) {
 		return (

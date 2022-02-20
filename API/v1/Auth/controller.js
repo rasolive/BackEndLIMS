@@ -10,10 +10,31 @@ function generateToken(params={}){
 	return jwt.sign(params, process.env.JWT_SECRET, {expiresIn: 3600});
 }
 
+
+exports.findUser = async (req, res, next) => {
+
+	const {email} = req.body
+	console.log("body", req.body)
+
+	try{
+		
+		const usuario = await Users.findOne({email})
+
+		return res.status(200).send({response:`usuário ${usuario.email} válido`})
+			
+
+	}catch(err){
+		return res.status(400).send({error:'User not Found'});
+	}
+
+}
+
+
 // POST
 exports.post = async (req, res, next) => {
 
 		const {user, email} = req.body
+		console.log("body", req.body)
 
 		try{
 			if (await Users.findOne({email}))
