@@ -73,6 +73,15 @@ exports.authenticate = async (req, res, next) => {
 
 }
 
+exports.authenticatevisitant = async (req, res, next) => {
+
+	const {email, name, role} = req.body
+
+	
+	res.send({token: generateToken({name: name, email: email, role: role}) });
+
+}
+
 // PUT
 exports.put = async (req, res, next) => {
 
