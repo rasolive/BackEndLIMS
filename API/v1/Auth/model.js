@@ -24,6 +24,10 @@ const Users = new Schema({
 		required: true,
 		select: false
 	},
+	role: {
+		type: String,
+		required: true,
+	},
 	createdBy: String,
 	updatedBy: String,
 }, {

@@ -45,7 +45,7 @@ exports.post = async (req, res, next) => {
 			response.message.password =  undefined
 
 			return res.send({response,
-				token: generateToken({id: response.message._id, name: response.message.name, email: response.message.email })});
+				token: generateToken({id: response.message._id, name: response.message.name, email: response.message.email, role: response.message.role })});
 
 		}catch(err){
 			return res.status(400).send({error:'Registation failed'});
@@ -69,7 +69,7 @@ exports.authenticate = async (req, res, next) => {
 
 
 	res.send({user, 
-		token: generateToken({id: user._id, name: user.name, email: user.email}) });
+		token: generateToken({id: user._id, name: user.name, email: user.email, role: user.role}) });
 
 }
 
