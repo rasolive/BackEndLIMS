@@ -51,7 +51,7 @@ exports.getList = async (req, res, next) => {
 
 		const returnList = await findList({}, Reagents);
 
-		return res.json({returnList, user: req.user}).end();
+		return res.json(returnList).end();
 
 	} catch (error) {
 		return (
@@ -98,9 +98,12 @@ exports.deleteById = async (req, res, next) => {
 		if (!validate.every(item => Boolean(item) === true)) {
 			throw BADREQUEST;
 		}
+		
+		const body = req.body
 
-		Object.assign(req.body, {user: "Usuário de alteração"})
-		const returnList = await remove(req.params.id, req.body, Reagents);
+    	body.user = req.user.email
+
+		const returnList = await remove(req.params.id, body, Reagents);
 
 		if (returnList) {
 			return res.json({ success: true }).end();
