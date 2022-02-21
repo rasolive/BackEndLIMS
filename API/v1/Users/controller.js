@@ -6,10 +6,6 @@ const { create, update, findById, findList, remove } = require('../../../reposit
 const { INTERNALSERVERERROR, BADREQUEST } = require('../../../Globals/httpErros');
 const { errorLog } = require('../../../Globals/utils');
 
-function generateToken(params={}){
-	return jwt.sign(params, process.env.JWT_SECRET, {expiresIn: 3600});
-}
-
 
 // POST
 exports.post = async (req, res, next) => {
