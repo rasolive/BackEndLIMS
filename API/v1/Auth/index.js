@@ -1,8 +1,9 @@
 'use strict';
 
 const router = require('express').Router();
+const authMiddleware = require('../../../Globals/middlewares/auth')
 
-const { getList, getById, post, put, deleteById, authenticate,findUser, authenticatevisitant } = require('./controller');
+const {  post, authenticate,findUser, authenticatevisitant, isAuthenticated } = require('./controller');
 
 // Authenticate
 router.post('/authenticate', authenticate);
@@ -13,19 +14,11 @@ router.post('/authenticatevisitant', authenticatevisitant);
 // findUser
 router.post('/finduser', findUser);
 
-// GET list
-router.get('/', getList);
-
-// // GET by ID
-router.get('/:id', getById);
+//isAuthenticated
+router.get('/isAuthenticated', isAuthenticated);
 
 // // POST
-router.post('/', post);
+router.post('/createUser', post);
 
-// // PUT
-router.put('/:id', put);
-
-// // DELETE
-router.delete('/:id', deleteById);
 
 module.exports = router;

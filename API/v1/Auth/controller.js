@@ -40,7 +40,7 @@ exports.post = async (req, res, next) => {
 			if (await Users.findOne({email}))
 				return res.status(400).send({error:'User already exists'});
 		
-			const response = await create(req.body, user, Users);
+			const response = await create(req.body, email, Users);
 			 
 			response.message.password =  undefined
 
@@ -82,91 +82,25 @@ exports.authenticatevisitant = async (req, res, next) => {
 
 }
 
-// PUT
-exports.put = async (req, res, next) => {
+//isAuthenticated
+exports.isAuthenticated = async (req, res, next) => {
+	const authHeader = req.headers.authorization;
 
+    if(!authHeader)
+        return res.status(200).send({ "isAuthenticated": "false"});
 
-	const returnList = await update(req.params.id, req.body, Users);
+    
+    token = authHeader
 
-	try {
-		if (returnList) {
-			return res.json({ _id: req.params.id, success: true }).end();
-		} else {
-			throw errorLog("Não foi possivel atualizar", NOTFOUND);
-		}
-	} catch (error) {
-		return (
-			next(errorLog("put.catch "+error, (error && error.status) ? error : INTERNALSERVERERROR))
-		)
-	}
-}
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
+       if (err) return res.status(200).send({ "isAuthenticated": "false"})
 
-// GET list
-exports.getList = async (req, res, next) => {
-    try {
-		//const { tokenUser } = res.session;
+       req.user = decoded;
 
-		const returnList = await findList({}, Users);
+       res.send({"isAuthenticated": "true"});
+    } )
 
-		return res.json(returnList).end();
-
-	} catch (error) {
-		return (
-			next(errorLog("getList.catch ", (error && error.status) ? error : INTERNALSERVERERROR))
-		)
-	}
-};
-
-// GET by ID
-exports.getById = async (req, res, next) => {
-	try {
 		
-        const validate = [ req.params.id ];
 
-		if (!validate.every(item => Boolean(item) === true)) {
-			throw BADREQUEST;
-		}
-        
-        const options = {}
-		Object.assign(options, { active: true })
-		Object.assign(options, req.query || {})
-		delete options.token;        
-
-		const returnList = await findById(req.params.id, options, User);
-		
-        if (!returnList) return res.json({}).end();
-
-		return res.json(returnList).end();
-
-	} catch (error) {
-		return (
-			next(errorLog("getById.catch", (error && error.status) ? error : INTERNALSERVERERROR))
-		)
-	}
 }
 
-
-// DELETE
-exports.deleteById = async (req, res, next) => {
-	try {
-
-		const validate = [ req.params.id ];
-
-		if (!validate.every(item => Boolean(item) === true)) {
-			throw BADREQUEST;
-		}
-
-		Object.assign(req.body, {user: "Usuário de alteração"})
-		const returnList = await remove(req.params.id, req.body, User);
-
-		if (returnList) {
-			return res.json({ success: true }).end();
-		} else {
-			next(NOTFOUND);
-		}
-	} catch (error) {
-		return (
-			next(errorLog("delete.catch "+error, (error && error.status) ? error : INTERNALSERVERERROR))
-		)
-	}
-}
