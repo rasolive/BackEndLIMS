@@ -5,17 +5,17 @@ const { Schema } = mongoose;
 
 // const TableSchema = new Schema({ _id: Number, evidencia: String, fonte: String, detentor: String });
 
-const Lotes = new Schema({
+const Materiais = new Schema({
 	_id: Number,
 	active: Boolean,
-	material: { type: Number, ref: "materiais" },
-	lote: String,
-	validade: Date,
-	statusLote: Number,
+	codigo: Number,
+	nome: String,
+	armazenamento: Number,
+	statusMaterial: Number,
 	createdBy: String,
 	updatedBy: String,
 }, {
 	timestamps: true,
 });
 
-module.exports = mongoose.model('Lotes', Lotes, 'lotes');
+module.exports = mongoose.model('Materiais', Materiais, 'materiais');
