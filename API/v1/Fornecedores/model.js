@@ -5,18 +5,17 @@ const { Schema } = mongoose;
 
 // const TableSchema = new Schema({ _id: Number, evidencia: String, fonte: String, detentor: String });
 
-const Materiais = new Schema({
+const Fornecedores = new Schema({
 	_id: Number,
 	active: Boolean,
-	codigo: Number,
 	nome: String,
-	armazenamento: Number,
-	statusMaterial: Number,
-	fornecedores:{type: Array, default: {}, ref: "fornecedores"},
+	endereco: {type: Array, default: {} },
+	telefone: {type: Array, default: {} },
+	cnpj: String,
 	createdBy: String,
 	updatedBy: String,
 }, {
 	timestamps: true,
 });
 
-module.exports = mongoose.model('Materiais', Materiais, 'materiais');
+module.exports = mongoose.model('Fornecedores', Fornecedores, 'fornecedores');
