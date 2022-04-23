@@ -3,7 +3,7 @@
 const router = require('express').Router();
 const authMiddleware = require('../../../Globals/middlewares/auth')
 
-const { getList, getById, post, put, deleteById } = require('./controller');
+const { getList, getById, post, put, deleteById, getListByName } = require('./controller');
 
 router.use(authMiddleware)
 // GET list
@@ -11,6 +11,9 @@ router.get('/', getList);
 
 // // GET by ID
 router.get('/:id', getById);
+
+// // GET by lista
+router.post('/lista', getListByName);
 
 // // POST
 router.post('/', post);

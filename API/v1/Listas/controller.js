@@ -1,5 +1,5 @@
 const { Listas } = require('../../../Models');
-const { create, update, findById, findList, remove } = require('../../../repositories');
+const { create, update, findById, findList, remove, findOne } = require('../../../repositories');
 const { INTERNALSERVERERROR, BADREQUEST } = require('../../../Globals/httpErros');
 const { errorLog } = require('../../../Globals/utils');
 
@@ -87,6 +87,21 @@ exports.getById = async (req, res, next) => {
 	}
 }
 
+// GET by Lista by Name
+exports.getListByName = async (req, res, next) => {
+    try {
+		//const { tokenUser } = res.session;
+
+		const returnList = await findList(req.body, Listas);
+
+		return res.json(returnList).end();
+
+	} catch (error) {
+		return (
+			next(errorLog("getList.catch ", (error && error.status) ? error : INTERNALSERVERERROR))
+		)
+	}
+};
 
 // DELETE
 exports.deleteById = async (req, res, next) => {
