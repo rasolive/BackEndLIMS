@@ -8,7 +8,6 @@ const { Schema } = mongoose;
 const Suppliers = new Schema({
 	_id: Number,
 	active: Boolean,
-	cod: Number,
 	name: String,
 	rua: String,
 	numero: String,

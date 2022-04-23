@@ -8,7 +8,7 @@ const { Schema } = mongoose;
 const Listas = new Schema({
 	_id: Number,
 	active: Boolean,
-	nome: String,
+	name: String,
 	lista: {type: Array, default: {} },
 	createdBy: String,
 	updatedBy: String,
