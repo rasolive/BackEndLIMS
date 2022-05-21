@@ -12,7 +12,7 @@ const Materiais = new Schema({
 	name: String,
 	armazenamento: {type: String, default: {}, ref: "listas"},
 	statusMaterial: {type: String, default: {}, ref: "listas"},
-	fornecedores:{type: Array, default: {}, ref: "fornecedores"},
+	fornecedor:{type: Array, default: {}, ref: "fornecedores"},
 	createdBy: String,
 	updatedBy: String,
 }, {
