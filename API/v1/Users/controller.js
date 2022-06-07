@@ -2,7 +2,7 @@ require('dotenv').config()
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { Users} = require('../../../Models');
-const { create, update, findById, findList, remove } = require('../../../repositories');
+const { create, update, findById, findList, remove} = require('../../../repositories');
 const { INTERNALSERVERERROR, BADREQUEST } = require('../../../Globals/httpErros');
 const { errorLog } = require('../../../Globals/utils');
 
@@ -35,6 +35,8 @@ exports.put = async (req, res, next) => {
 
 	const body = req.body
 	body.user = req.user.email
+
+	console.log('body', body)
 
 
 	const returnList = await update(req.params.id, req.body, Users);
@@ -83,7 +85,7 @@ exports.getById = async (req, res, next) => {
 		Object.assign(options, req.query || {})
 		delete options.token;        
 
-		const returnList = await findById(req.params.id, options, User);
+		const returnList = await findById(req.params.id, options, Users);
 		
         if (!returnList) return res.json({}).end();
 

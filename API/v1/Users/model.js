@@ -25,7 +25,7 @@ const Users = new Schema({
 		select: false
 	},
 	role: {
-		type: String,
+		type: Array, default: {},
 		required: true,
 	},
 	createdBy: String,
@@ -37,6 +37,13 @@ const Users = new Schema({
 Users.pre("save", async function(next){
 	const hash = await bcrypt.hash( this.password, 10);
 	this.password = hash;
+	next();
+})
+
+Users.pre('findOneAndUpdate', async function(next){
+	if(this._update.password){
+	const hash = await bcrypt.hash( this._update.password, 10);
+	this._update.password = hash;}
 	next();
 })
 
