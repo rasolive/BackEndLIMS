@@ -3,9 +3,10 @@ const { Storage } = require('@google-cloud/storage');
 
 exports.download = async (req, res, next) => {
 
-    if (!req.body.path) throw { status: 400, message: 'Bad request' }
+    if (!req.query.path) throw { status: 400, message: 'Bad request' }
 
-    let pathCloud = req.body.path
+    let pathCloud = req.query.path
+    let fileName = req.query.fileName
     
    
     let fullName = pathCloud
@@ -22,7 +23,7 @@ exports.download = async (req, res, next) => {
         const stream = await storage.bucket(bucketName).file(pathCloud).createReadStream();
 
         res.setHeader("content-type", "application/octet-stream");
-        res.setHeader('Content-disposition', `attachment; filename=${nameFileOfDB}`)
+        res.setHeader('Content-disposition', `attachment; filename=${fileName}`)
         stream.on('error', (err) => {            
             next({ status: 400, message: 'Bad request' })            
         })
