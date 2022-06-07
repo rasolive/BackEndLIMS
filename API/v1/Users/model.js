@@ -24,6 +24,9 @@ const Users = new Schema({
 		required: true,
 		select: false
 	},
+	resetPass: {
+		type: Boolean,
+	},
 	role: {
 		type: Array, default: {},
 		required: true,
