@@ -3,7 +3,8 @@
 const router = require('express').Router();
 const authMiddleware = require('../../../Globals/middlewares/auth')
 
-const { getList, getById, post, put, deleteById } = require('./controller');
+const { getList, getById, post, put, deleteById, findOne } = require('./controller');
+//const { findOne } = require('./model');
 
 router.use(authMiddleware)
 
@@ -12,6 +13,9 @@ router.get('/', getList);
 
 // // GET by ID
 router.get('/:id', getById);
+
+// // POST
+router.post('/findOne', findOne);
 
 // // POST
 router.post('/', post);
