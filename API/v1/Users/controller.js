@@ -6,6 +6,22 @@ const { create, update, findById, findList, remove} = require('../../../reposito
 const { INTERNALSERVERERROR, BADREQUEST } = require('../../../Globals/httpErros');
 const { errorLog } = require('../../../Globals/utils');
 
+exports.findOne = async (req, res, next) => {
+	
+	const email = req.body.email || req.user.email;
+
+		try{
+					
+			 const response = await Users.findOne({email})
+			 return res.send(response);
+
+		}catch(err){
+
+			return res.status(400).send({error:'failed'});
+			
+		}
+
+}
 
 // POST
 exports.post = async (req, res, next) => {
@@ -14,14 +30,15 @@ exports.post = async (req, res, next) => {
 	const email = req.body.email
 
 		try{
-			if (await Users.findOne({email}))
-				return res.status(400).send({error:'User already exists'});
-		
+			if (await Users.findOne({email})){
+				return res.status(412).send({error:'User already exists'});}
+				
+			else{
 			const response = await create(req.body, user, Users);
 			 
 			response.message.password =  undefined
 
-			return res.send(response);
+			return res.send(response);}
 
 		}catch(err){
 			return res.status(400).send({error:'Registation failed'});
