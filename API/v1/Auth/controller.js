@@ -45,7 +45,7 @@ exports.post = async (req, res, next) => {
 			response.message.password =  undefined
 
 			return res.send({response,
-				token: generateToken({id: response.message._id, name: response.message.name, email: response.message.email, role: response.message.role })});
+				token: generateToken({id: response.message._id, name: response.message.name, email: response.message.email, role: response.message.role, validPass: response.message.validPass}) });
 
 		}catch(err){
 			return res.status(400).send({error:'Registation failed'});
@@ -69,7 +69,7 @@ exports.authenticate = async (req, res, next) => {
 
 
 	res.send({user, 
-		token: generateToken({id: user._id, name: user.name, email: user.email, role: user.role}) });
+		token: generateToken({id: user._id, name: user.name, email: user.email, role: user.role, validPass: user.validPass}) });
 
 }
 
@@ -78,7 +78,7 @@ exports.authenticatevisitant = async (req, res, next) => {
 	const {email, name, role} = req.body
 
 	
-	res.send({token: generateToken({name: name, email: email, role: role}) });
+	res.send({token: generateToken({name: name, email: email, role: role,  validPass: true}) });
 
 }
 
@@ -97,7 +97,8 @@ exports.isAuthenticated = async (req, res, next) => {
 
        req.user = decoded;
 
-       res.send({"isAuthenticated": "true"});
+	   res.send({"isAuthenticated": "true",
+				"validPass": `${req.user.validPass}`});
     } )
 
 		
