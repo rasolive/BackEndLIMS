@@ -24,7 +24,7 @@ const Users = new Schema({
 		required: true,
 		select: false
 	},
-	resetPass: {
+	validPass: {
 		type: Boolean,
 	},
 	role: {
