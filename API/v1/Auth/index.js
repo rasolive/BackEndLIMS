@@ -3,7 +3,7 @@
 const router = require('express').Router();
 const authMiddleware = require('../../../Globals/middlewares/auth')
 
-const {  post, authenticate,findUser, authenticatevisitant, isAuthenticated } = require('./controller');
+const {  createUser, authenticate,findUser, authenticatevisitant, isAuthenticated, findOne } = require('./controller');
 
 // Authenticate
 router.post('/authenticate', authenticate);
@@ -18,7 +18,10 @@ router.post('/finduser', findUser);
 router.get('/isAuthenticated', isAuthenticated);
 
 // // POST
-router.post('/createUser', post);
+router.post('/createUser', createUser);
+
+// findOne
+router.post('/findone', findOne);
 
 
 module.exports = router;

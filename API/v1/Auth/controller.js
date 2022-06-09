@@ -29,27 +29,49 @@ exports.findUser = async (req, res, next) => {
 
 }
 
-
-// POST
-exports.post = async (req, res, next) => {
-
-		const {user, email} = req.body
-		console.log("body", req.body)
+exports.findOne = async (req, res, next) => {
+	
+	const email = req.body.email
 
 		try{
-			if (await Users.findOne({email}))
-				return res.status(400).send({error:'User already exists'});
-		
-			const response = await create(req.body, email, Users);
+					
+			 const response = await Users.findOne({email})
+			 return res.send(response);
+
+		}catch(err){
+
+			return res.status(400).send({error:'failed'});
+			
+		}
+
+}
+
+
+// POST
+exports.createUser = async (req, res, next) => {
+
+	
+	const email = req.body.email
+
+	const body = req.body
+
+	body.role = [{id: "4zlemf88g", perfil: "visitante"}]
+
+		try{
+			if (await Users.findOne({email})){
+				return res.status(412).send({error:'User already exists'});}
+				
+			else{
+			const response = await create(body, email, Users);
 			 
 			response.message.password =  undefined
 
-			return res.send({response,
-				token: generateToken({id: response.message._id, name: response.message.name, email: response.message.email, role: response.message.role, validPass: response.message.validPass}) });
+			return res.send(response);}
 
 		}catch(err){
 			return res.status(400).send({error:'Registation failed'});
 		}
+
 
 }
 
