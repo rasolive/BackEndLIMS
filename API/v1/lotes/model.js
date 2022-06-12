@@ -8,10 +8,12 @@ const { Schema } = mongoose;
 const Lotes = new Schema({
 	_id: Number,
 	active: Boolean,
-	material: { type: Number, ref: "materiais" },
+	material: { type: Number, ref: "Materiais" },
+	fornecedor: { type: Number, ref: "Suppliers" },
 	lote: String,
-	validade: Date,
-	statusLote: Number,
+	loteFornecedor: String,
+	validade: String,
+	statusLote: {type: String, ref: "Listas"},
 	createdBy: String,
 	updatedBy: String,
 }, {
