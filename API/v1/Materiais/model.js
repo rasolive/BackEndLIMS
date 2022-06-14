@@ -13,6 +13,7 @@ const Materiais = new Schema({
 	armazenamento: {type: String, ref: "listas"},
 	statusMaterial: {type: String, ref: "listas"},
 	fornecedor:{type: Array, default: {}, ref: "fornecedores"},
+	umb: {type: String, ref: "listas"},
 	createdBy: String,
 	updatedBy: String,
 }, {
