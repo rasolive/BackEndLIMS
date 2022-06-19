@@ -10,7 +10,7 @@ const Analysis = new Schema({
 	active: Boolean,
 	AnalysisType: String,
 	name: String,
-	AnalysisMethod: String,
+	AnalysisMethod: {type: String, ref: "AnalysisMethod"},
 	unit: {type: String, ref: "listas"},
 	createdBy: String,
 	updatedBy: String,
