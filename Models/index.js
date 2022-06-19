@@ -4,6 +4,7 @@ const Lotes = require('../API/v1/lotes/model');
 const Users = require('../API/v1/Users/model');
 const Listas = require('../API/v1/Listas/model');
 const Fornecedores = require('../API/v1/Fornecedores/model');
+const Analysis = require('../API/v1/Analysis/model');
 
 const models = {
     Reagents,
@@ -12,6 +13,7 @@ const models = {
     Materiais,
     Listas,
     Fornecedores,
+    Analysis,
 };
 
 module.exports = models;
