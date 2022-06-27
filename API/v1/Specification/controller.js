@@ -48,7 +48,7 @@ exports.getList = async (req, res, next) => {
     try {
 		//const { tokenUser } = res.session;
 
-		const returnList = await findList({}, Specification);
+		const returnList = await findList({}, Specification, {path:'material', select:['name']});
 
 		return res.json(returnList).end();
 
