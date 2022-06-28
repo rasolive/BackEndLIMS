@@ -7,7 +7,7 @@ const { INTERNALSERVERERROR, BADREQUEST } = require('../../../Globals/httpErros'
 const { errorLog } = require('../../../Globals/utils');
 
 function generateToken(params={}){
-	return jwt.sign(params, process.env.JWT_SECRET, {expiresIn: 3600});
+	return jwt.sign(params, process.env.JWT_SECRET, {expiresIn: 3600*5});
 }
 
 
