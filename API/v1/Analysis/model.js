@@ -7,6 +7,7 @@ const { Schema } = mongoose;
 
 const Analysis = new Schema({
 	_id: Number,
+	id:Number, //id necessário para o frontend rodar o script da tabela de especificações
 	active: Boolean,
 	AnalysisType: String,
 	name: String,
@@ -17,5 +18,10 @@ const Analysis = new Schema({
 }, {
 	timestamps: true,
 });
+
+Analysis.pre("save", async function(next){
+	this.id= this._id;
+	next();
+})
 
 module.exports = mongoose.model('Analysis', Analysis, 'analysis');
