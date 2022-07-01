@@ -8,7 +8,7 @@ const { Schema } = mongoose;
 const Materiais = new Schema({
 	_id: Number,
 	active: Boolean,
-	cod: Number,
+	cod: String,
 	name: String,
 	armazenamento: {type: String, ref: "listas"},
 	statusMaterial: {type: String, ref: "listas"},
