@@ -8,6 +8,10 @@ exports.post = async (req, res, next) => {
 
 	const user = req.user.email;
 
+	const lastRow = await Lotes.findOne().sort({ _id: -1 });
+	const lote = lastRow ? 'LM'+(lastRow._id + 1000001) : 1000001;
+	req.body.lote = lote;
+
 	const result = await create(req.body, user, Lotes);
 
 	if (result.status >= 400) {
