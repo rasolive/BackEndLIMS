@@ -7,6 +7,10 @@ const { errorLog } = require('../../../Globals/utils');
 exports.post = async (req, res, next) => {
 
 		const user = req.user.email;
+
+		const lastRow = await Materiais.findOne().sort({ _id: -1 });
+        const codMaterial = lastRow ? 'M'+(lastRow._id + 10001) : 'M10001';
+		req.body.cod = codMaterial;
 	
 		const result = await create(req.body, user, Materiais);
 
