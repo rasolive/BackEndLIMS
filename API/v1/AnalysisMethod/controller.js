@@ -7,6 +7,10 @@ const { errorLog } = require('../../../Globals/utils');
 exports.post = async (req, res, next) => {
 
 		const user = req.user.email;
+
+		const lastRow = await AnalysisMethod.findOne().sort({ _id: -1 });
+        const methodName = lastRow ? 'MA-'+(lastRow._id + 1001) : 'MA-1001';
+		req.body.name = methodName;
 	
 		const result = await create(req.body, user, AnalysisMethod);
 
