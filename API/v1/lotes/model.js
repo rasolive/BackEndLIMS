@@ -17,6 +17,8 @@ const Lotes = new Schema({
 	unidade: String,
 	validade: String,
 	statusLote: {type: String, ref: "Listas"},
+	analysisResult: { type: Array, default: {}},
+	startedAnalysis: { type: Boolean, default: false },
 	createdBy: String,
 	updatedBy: String,
 }, {

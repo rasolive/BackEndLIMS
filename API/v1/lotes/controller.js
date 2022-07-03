@@ -51,8 +51,11 @@ try {
 exports.getList = async (req, res, next) => {
 try {
 	//const { tokenUser } = res.session;
+	if (req.query.statusLote) {
+	statusLote = { statusLote: req.query.statusLote }}
+	else {statusLote = {}}
 
-	const returnList = await findList({}, Lotes, [{path:'material', select:['name']}, {path:'fornecedor', select:['name']}]);
+	const returnList = await findList(statusLote || {}, Lotes, [{path:'material', select:['name']}, {path:'fornecedor', select:['name']}]);
 
 	return res.json(returnList).end();
 
