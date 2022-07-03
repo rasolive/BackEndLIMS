@@ -1,5 +1,5 @@
 const { Specification } = require('../../../Models');
-const { create, update, findById, findList, remove } = require('../../../repositories');
+const { create, update, findById, findList, remove, findOne } = require('../../../repositories');
 const { INTERNALSERVERERROR, BADREQUEST } = require('../../../Globals/httpErros');
 const { errorLog } = require('../../../Globals/utils');
 
@@ -75,6 +75,32 @@ exports.getById = async (req, res, next) => {
 		delete options.token;        
 
 		const returnList = await findById(req.params.id, options, Specification);
+		
+        if (!returnList) return res.json({}).end();
+
+		return res.json(returnList).end();
+
+	} catch (error) {
+		return (
+			next(errorLog("getById.catch", (error && error.status) ? error : INTERNALSERVERERROR))
+		)
+	}
+}
+
+exports.getByMaterial = async (req, res, next) => {
+	try {
+		
+        const validate = [ req.params.id ];
+
+		if (!validate.every(item => Boolean(item) === true)) {
+			throw BADREQUEST;
+		}
+        
+        const options = {'material': req.params.id}
+		Object.assign(options, { active: true })
+		delete options.token;        
+
+		const returnList = await findOne(options, Specification);
 		
         if (!returnList) return res.json({}).end();
 
