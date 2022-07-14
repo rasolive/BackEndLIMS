@@ -9,9 +9,9 @@ const Analysis = new Schema({
 	_id: Number,
 	id:Number, //id necessário para o frontend rodar o script da tabela de especificações
 	active: Boolean,
-	AnalysisType: String,
-	name: String,
-	AnalysisMethod: {type: String, ref: "AnalysisMethod"},
+	AnalysisType: {type:String, required:true},
+	name: { type: String, required: true, unique: true },
+	AnalysisMethod: {type: String, ref: "AnalysisMethod", required: true},
 	unit: {type: String, ref: "listas"},
 	createdBy: String,
 	updatedBy: String,

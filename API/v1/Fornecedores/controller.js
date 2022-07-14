@@ -3,6 +3,23 @@ const { create, update, findById, findList, remove } = require('../../../reposit
 const { INTERNALSERVERERROR, BADREQUEST } = require('../../../Globals/httpErros');
 const { errorLog } = require('../../../Globals/utils');
 
+exports.findOne = async (req, res, next) => {
+	
+	const cnpj = req.body.cnpj || ''
+
+		try{
+					
+			 const response = await Fornecedores.findOne({'cnpj': cnpj})
+			 return res.send(response);
+
+		}catch(err){
+
+			return res.status(400).send({error:'failed'});
+			
+		}
+
+}
+
 // POST
 exports.post = async (req, res, next) => {
 

@@ -8,8 +8,8 @@ const { Schema } = mongoose;
 const Specification = new Schema({
 	_id: Number,
 	active: Boolean,
-	material: { type: Number, ref: "Materiais" },
-	specification: { type: Array, default: {}, ref: "Analysis" },
+	material: { type: Number, ref: "Materiais", required: true, unique: true },
+	specification: { type: Array, default: {}, ref: "Analysis"},
 	createdBy: String,
 	updatedBy: String,
 }, {

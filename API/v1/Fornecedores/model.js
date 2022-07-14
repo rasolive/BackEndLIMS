@@ -8,7 +8,7 @@ const { Schema } = mongoose;
 const Suppliers = new Schema({
 	_id: Number,
 	active: Boolean,
-	name: String,
+	name: {type: String, required: true},
 	rua: String,
 	numero: String,
 	bairro: String,
@@ -18,7 +18,7 @@ const Suppliers = new Schema({
 	telefone: String,
 	email: String,
 	//telefone: {type: Array, default: {} },
-	cnpj: String,
+	cnpj: {type: String, required: true, unique: true},
 	createdBy: String,
 	updatedBy: String,
 }, {

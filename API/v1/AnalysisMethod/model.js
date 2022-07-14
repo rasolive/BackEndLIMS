@@ -8,7 +8,7 @@ const { Schema } = mongoose;
 const AnalysisMethod = new Schema({
 	_id: Number,
 	active: Boolean,
-	name: String,
+	name: {type:String, required:true, unique: true},
 	description: String,
 	rev: Number,
 	process: String,
