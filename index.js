@@ -13,7 +13,7 @@ const swaggerDocs = require('./swagger.json')
 require('dotenv').config()
 
 // Constants
-const PORT = process.env.APP_PORT || 8082;
+const PORT = process.env.PORT || 8089;
 const HOST = process.env.APP_HOST || 'unknown_host';
 const REQ_SIZE_LIMIT = process.env.APP_REQ_SIZE_LIMIT || '1mb';
 
