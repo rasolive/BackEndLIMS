@@ -1,9 +1,28 @@
 const { Listas } = require('../../../Models');
-const { create, update, findById, findList, remove, findOne } = require('../../../repositories');
+const { create, update, findById, findList, remove} = require('../../../repositories');
 const { INTERNALSERVERERROR, BADREQUEST } = require('../../../Globals/httpErros');
 const { errorLog } = require('../../../Globals/utils');
 
 // POST
+
+exports.findOne = async (req, res, next) => {
+	
+	const name = req.body.name || ''
+
+		try{
+					
+			 const response = await Listas.findOne({'name': name})
+			 return res.send(response);
+
+		}catch(err){
+
+			return res.status(400).send({error:'failed'});
+			
+		}
+
+}
+
+
 exports.post = async (req, res, next) => {
 
 		const user = req.user.email;
