@@ -6,12 +6,28 @@ const { create, update, findById, findList, remove} = require('../../../reposito
 const { INTERNALSERVERERROR, BADREQUEST } = require('../../../Globals/httpErros');
 const { errorLog } = require('../../../Globals/utils');
 
-exports.findOne = async (req, res, next) => {
+exports.getRoles = async (req, res, next) => {
 	
 	const email = req.body.email || req.user.email;
 
 		try{
 					
+			 const response = await Users.findOne({email})
+			 return res.send(response.role.map((node) => node.perfil));
+
+		}catch(err){
+
+			return res.status(200).send(['Usuário não autorizado']);
+			
+		}
+
+}
+
+exports.findOne = async (req, res, next) => {
+	
+	const email = req.user.email
+
+		try{					
 			 const response = await Users.findOne({email})
 			 return res.send(response);
 
