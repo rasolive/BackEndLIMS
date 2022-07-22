@@ -3,13 +3,16 @@
 const router = require('express').Router();
 const authMiddleware = require('../../../Globals/middlewares/auth')
 
-const { getList, getById, post, put, deleteById, findOne } = require('./controller');
+const { getList, getById, post, put, deleteById, findOne, getRoles } = require('./controller');
 //const { findOne } = require('./model');
 
 router.use(authMiddleware)
 
 // GET list
 router.get('/', getList);
+
+// GET roles
+router.get('/roles', getRoles);
 
 // // GET by ID
 router.get('/:id', getById);
