@@ -80,7 +80,7 @@ exports.authenticate = async (req, res, next) => {
 	const {email, password} = req.body
 
 	const user = await Users.findOne({email}).select('+password')
-	console.log(user)
+	
 	if (!user)
 		return res.status(400).send({error: 'User not foud'})
 
@@ -91,7 +91,7 @@ exports.authenticate = async (req, res, next) => {
 
 
 	res.send({user, 
-		token: generateToken({id: user._id, name: user.name, email: user.email, role: user.role, validPass: user.validPass}) });
+		token: generateToken({id: user._id, name: user.name, email: user.email, role: user.role.map((node) => node.perfil), validPass: user.validPass}) });
 
 }
 
