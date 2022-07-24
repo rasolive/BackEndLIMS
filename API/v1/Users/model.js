@@ -21,7 +21,6 @@ const Users = new Schema({
 	},
 	password: {
 		type: String,
-		required: true,
 		select: false
 	},
 	validPass: {
@@ -38,8 +37,9 @@ const Users = new Schema({
 });
 
 Users.pre("save", async function(next){
+	if(this.password){
 	const hash = await bcrypt.hash( this.password, 10);
-	this.password = hash;
+	this.password = hash;}
 	next();
 })
 
