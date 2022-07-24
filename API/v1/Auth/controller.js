@@ -55,7 +55,7 @@ exports.createUser = async (req, res, next) => {
 
 	const body = req.body
 
-	body.role = [{id: "4zlemf88g", perfil: "visitante"}]
+	body.role = [{id: "4zlemf88g", perfil: "V"}]
 
 		try{
 			if (await Users.findOne({email})){
