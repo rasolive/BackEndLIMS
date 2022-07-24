@@ -55,16 +55,45 @@ exports.createUser = async (req, res, next) => {
 
 	const body = req.body
 
-	body.role = [{id: "4zlemf88g", perfil: "visitante"}]
+	body.role = [{id: "4zlemf88g", perfil: "V"}]
 
 		try{
 			if (await Users.findOne({email})){
 				return res.status(412).send({error:'User already exists'});}
 				
 			else{
+		
 			const response = await create(body, email, Users);
 			 
 			response.message.password =  undefined
+
+			return res.send(response);}
+
+		}catch(err){
+			return res.status(400).send({error:'Registation failed'});
+		}
+
+
+}
+// POST
+exports.createGoogleUser = async (req, res, next) => {
+
+	
+	const email = req.body.email
+
+	const body = req.body
+
+	body.validPass = true
+
+	body.role = [{id: "4zlemf88g", perfil: "V"}]
+
+		try{
+			if (await Users.findOne({email})){
+				return res.status(412).send({error:'User already exists'});}
+				
+			else{
+				console.log("body", body)
+			const response = await create(body, email, Users);
 
 			return res.send(response);}
 
@@ -80,7 +109,7 @@ exports.authenticate = async (req, res, next) => {
 	const {email, password} = req.body
 
 	const user = await Users.findOne({email}).select('+password')
-	console.log(user)
+	
 	if (!user)
 		return res.status(400).send({error: 'User not foud'})
 
@@ -91,16 +120,17 @@ exports.authenticate = async (req, res, next) => {
 
 
 	res.send({user, 
-		token: generateToken({id: user._id, name: user.name, email: user.email, role: user.role, validPass: user.validPass}) });
+		token: generateToken({id: user._id, name: user.name, email: user.email, role: user.role.map((node) => node.perfil), validPass: user.validPass}) });
 
 }
 
-exports.authenticatevisitant = async (req, res, next) => {
+exports.authenticateGoogleUser = async (req, res, next) => {
 
-	const {email, name, role} = req.body
+	const {email} = req.body
 
+	const user = await Users.findOne({email})
 	
-	res.send({token: generateToken({name: name, email: email, role: role,  validPass: true}) });
+	res.send({token: generateToken({id: user._id, name: user.name, email: user.email, role: user.role.map((node) => node.perfil), validPass: user.validPass}) });
 
 }
 
