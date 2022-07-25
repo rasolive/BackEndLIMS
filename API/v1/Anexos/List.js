@@ -13,17 +13,18 @@ exports.list = async (req, res, next) => {
             credentials: JSON.parse(process.env.GCP_CONFIG_PATH), 
         });        
             
-        const [files] = await storage.bucket(bucketName).getFiles({ prefix: path });
-        // console.log(files)
-        // console.log('Files:');
-        // files.forEach(file => {
-        // console.log(file.name);              
-        // })
-        files.forEach(file => {
-            file.path = path              
-            })
+        const [response] = await storage.bucket(bucketName).getFiles({ prefix: path });
 
-        return res.json(files).end();
+        var files = response.map(function(node) {
+			  return {
+				'name': node.name,
+				'path': path,
+			  };
+			})
+
+        console.log(files)
+
+       return res.json(files).end();
         
         } catch (err) {
             console.log(err)
