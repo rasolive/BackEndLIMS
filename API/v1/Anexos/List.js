@@ -3,31 +3,28 @@ const { Storage } = require('@google-cloud/storage');
 
 exports.list = async (req, res, next) => {
 
-    const path = req.body.gcpPatch
-    // console.log(path)
-  
-    try {        
-        const bucketName = process.env.GCP_BUCKET_NAME;
-        const storage = new Storage({
-            projectId: process.env.GCP_PROJECT_ID || '',
-            credentials: JSON.parse(process.env.GCP_CONFIG_PATH), 
-        });        
-            
-        const [response] = await storage.bucket(bucketName).getFiles({ prefix: path });
+  const path = req.body.gcpPatch
 
-        var files = response.map(function(node) {
-			  return {
-				'name': node.name,
-				'path': path,
-			  };
-			})
+  try {
+    const bucketName = process.env.GCP_BUCKET_NAME;
+    const storage = new Storage({
+      projectId: process.env.GCP_PROJECT_ID || '',
+      credentials: JSON.parse(process.env.GCP_CONFIG_PATH),
+    });
 
-        console.log(files)
+    const [response] = await storage.bucket(bucketName).getFiles({ prefix: path });
 
-       return res.json(files).end();
-        
-        } catch (err) {
-            console.log(err)
-            next({ status: 400, message: 'Bad request' })
-    }
+    var files = response.map(function (node) {
+      return {
+        'name': node.name,
+        'path': path,
+      };
+    })
+
+    return res.json(files).end();
+
+  } catch (err) {
+    console.log(err)
+    next({ status: 400, message: 'Bad request' })
+  }
 }

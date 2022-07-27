@@ -1,7 +1,7 @@
 require('dotenv').config()
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { Users } = require('../../../Models');
+const { Permissions } = require('../../../Models');
 const { create, update, findById, findList, remove } = require('../../../repositories');
 const { INTERNALSERVERERROR, BADREQUEST } = require('../../../Globals/httpErros');
 const { errorLog } = require('../../../Globals/utils');
@@ -12,7 +12,7 @@ exports.getRoles = async (req, res, next) => {
 
 	try {
 
-		const response = await Users.findOne({ email })
+		const response = await Permissions.findOne({ email })
 		return res.send(response.role.map((node) => node.perfil));
 
 	} catch (err) {
@@ -28,7 +28,7 @@ exports.findOne = async (req, res, next) => {
 	const email = req.user.email
 
 	try {
-		const response = await Users.findOne({ email })
+		const response = await Permissions.findOne({ email })
 		return res.send(response);
 
 	} catch (err) {
@@ -46,12 +46,12 @@ exports.post = async (req, res, next) => {
 	const email = req.body.email
 
 	try {
-		if (await Users.findOne({ email })) {
+		if (await Permissions.findOne({ email })) {
 			return res.status(412).send({ error: 'User already exists' });
 		}
 
 		else {
-			const response = await create(req.body, user, Users);
+			const response = await create(req.body, user, Permissions);
 
 			response.message.password = undefined
 
@@ -72,8 +72,7 @@ exports.put = async (req, res, next) => {
 	body.user = req.user.email
 
 
-
-	const returnList = await update(req.params.id, req.body, Users);
+	const returnList = await update(req.params.id, req.body, Permissions);
 
 	try {
 		if (returnList) {
@@ -93,7 +92,7 @@ exports.getList = async (req, res, next) => {
 	try {
 		//const { tokenUser } = res.session;
 
-		const returnList = await findList({}, Users);
+		const returnList = await findList({}, Permissions);
 
 		return res.json(returnList).end();
 
@@ -119,7 +118,7 @@ exports.getById = async (req, res, next) => {
 		Object.assign(options, req.query || {})
 		delete options.token;
 
-		const returnList = await findById(req.params.id, options, Users);
+		const returnList = await findById(req.params.id, options, Permissions);
 
 		if (!returnList) return res.json({}).end();
 
@@ -144,7 +143,7 @@ exports.deleteById = async (req, res, next) => {
 		}
 
 		Object.assign(req.body, { user: "Usuário de alteração" })
-		const returnList = await remove(req.params.id, req.body, Users);
+		const returnList = await remove(req.params.id, req.body, Permissions);
 
 		if (returnList) {
 			return res.json({ success: true }).end();

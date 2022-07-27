@@ -13,5 +13,6 @@ router.use('/fornecedores', require('./Fornecedores'));
 router.use('/analysis', require('./Analysis'));
 router.use('/analysismethod', require('./AnalysisMethod'));
 router.use('/specification', require('./Specification'));
+router.use('/permissions', require('./Permissions'));
 
 module.exports = router;
