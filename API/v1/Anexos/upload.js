@@ -8,7 +8,7 @@ var upload = multer();
 
 const storage = new Storage({
   projectId: process.env.GCP_PROJECT_ID || '',
-  credentials: JSON.parse(process.env.GCP_CONFIG_PATH), 
+  credentials: JSON.parse(process.env.GCP_CONFIG_PATH),
 });
 
 const UPLOAD_MAX_SIZE = process.env.GCP_UPLOAD_MAX_SIZE * 1000000;
@@ -17,7 +17,7 @@ const MB = 90;
 const propsToCreateBlacklist = {
   group: "workflow",
   label: 'WAIT FOR LABEL',
-  extBlackList: ["exe","bat"],
+  extBlackList: ["exe", "bat"],
   maxSize: (MB * 1024),
 }
 
@@ -29,24 +29,24 @@ module.exports.post = async (req, res, next) => {
     if (!files || files.length === 0) throw { status: 400, message: "Bad Request" };
 
     const archiveFullData = req.body.archiveFullData ? JSON.parse(req.body.archiveFullData) : null
-    if(!Boolean(archiveFullData)) throw { status: 400, message: "Bad Request" }
+    if (!Boolean(archiveFullData)) throw { status: 400, message: "Bad Request" }
 
     const metadata = getMetaData(files)
     let basePath = await getBasePath(archiveFullData)
 
-    Object.assign(metadata, { basePath });       
+    Object.assign(metadata, { basePath });
 
     Object.assign(archiveFullData, { metadata });
-    
+
     // •••••••••• ---------- Blacklists ---------- •••••••••• //
     Object.assign(propsToCreateBlacklist, { label: archiveFullData.metadata.basePath });
 
     const uploadFileResult = await tryUploadFileToStorage(files, archiveFullData); // « TO DO: add timestamp at send files
 
-    if(!Boolean(uploadFileResult)) {
+    if (!Boolean(uploadFileResult)) {
       throw { status: 500, message: "internal server error" };
-    }    
-    
+    }
+
     const inserted = "ok"
     if (!inserted || inserted.status >= 400) throw inserted;
 
@@ -70,23 +70,23 @@ const getMetaData = (files) => {
 
   let handleOriginalname = metadata.originalname;
   handleOriginalname = handleOriginalname.includes('.')
-  ? handleOriginalname.split('.') : handleOriginalname;
-  
+    ? handleOriginalname.split('.') : handleOriginalname;
+
   let ext = null;
   let shortName = null;
-  
+
   if (Array.isArray(handleOriginalname)) {
     ext = handleOriginalname.pop();
     shortName = handleOriginalname.join('.');
     Object.assign(metadata, { ext, shortName });
-  }    
+  }
   return metadata
 }
 
 // •••••••••• ---------- getFileURI ---------- •••••••••• //
-const getFileURI = (basePath = '') => {  
-  if (Boolean(basePath)) return basePath 
- };
+const getFileURI = (basePath = '') => {
+  if (Boolean(basePath)) return basePath
+};
 
 // •••••••••• ---------- getBasePath ---------- •••••••••• //
 const getBasePath = async (archiveFullData) => {
@@ -94,27 +94,27 @@ const getBasePath = async (archiveFullData) => {
   if (!archiveFullData) return '';
 
   const path = archiveFullData.path || null
-  
+
   let basePath = getFileURI(path);
-  
+
   if (path) {
     archiveFullData.folder = path.includes('/') ? path.split('/') : [path]
     return path;
   }
 
   if (archiveFullData.folder.length > 1) {
-    const concatFolders = archiveFullData.folder.filter( (item,index) => {
+    const concatFolders = archiveFullData.folder.filter((item, index) => {
       if (index > 1) return item
-      if ( index <= 1 && item !== equipamentName && item !== projectName){
+      if (index <= 1 && item !== equipamentName && item !== projectName) {
         return item
       }
-    });    
-    
+    });
+
     if (concatFolders.length > 0) {
-      return basePath.concat('/',concatFolders.join('/'));            
+      return basePath.concat('/', concatFolders.join('/'));
     }
   }
-  
+
   return basePath;
 }
 
@@ -124,21 +124,21 @@ const sendFileToStorage = async (
   path,
   metadata,
   bucketName = process.env.GCP_BUCKET_NAME
-  ) => {
-    try {
+) => {
+  try {
     // Implement file upload to storage
     const time = metadata.time;
     const bucket = storage.bucket(bucketName);
-    const finalPathName = `${(path ? path +'/': '')}${file.originalname}`;
+    const finalPathName = `${(path ? path + '/' : '')}${file.originalname}`;
     const blob = bucket.file(`${finalPathName}`);
-    
+
     const blobStream = blob.createWriteStream({
       resumable: false,
     });
 
     const blobReturn = new Promise((resolve, reject) => {
       blobStream
-      .on('finish', () => {                    
+        .on('finish', () => {
           resolve(`finish ${finalPathName}`);
         })
         .on('error', (err) => {
@@ -153,20 +153,20 @@ const sendFileToStorage = async (
 };
 
 // •••••••••• ---------- tryUploadFileToStorage ---------- •••••••••• //
-const tryUploadFileToStorage = async (files,archiveFullData) => {  
+const tryUploadFileToStorage = async (files, archiveFullData) => {
   try {
-  if(!Boolean(files) || !Boolean(archiveFullData)) {
-    return { status: 400, message: "Bad request" };
-  }
-  const basePath =  archiveFullData.metadata.basePath
+    if (!Boolean(files) || !Boolean(archiveFullData)) {
+      return { status: 400, message: "Bad request" };
+    }
+    const basePath = archiveFullData.metadata.basePath
 
-  let filesToUpload = [];
+    let filesToUpload = [];
     for (const file of files) {
       if (file.size > UPLOAD_MAX_SIZE)
-      throw {
-        status: 413,
-        message: `The files must not exceed ${UPLOAD_MAX_SIZE / 1000000}MB`,
-      };
+        throw {
+          status: 413,
+          message: `The files must not exceed ${UPLOAD_MAX_SIZE / 1000000}MB`,
+        };
 
       filesToUpload.push({
         file,
@@ -174,26 +174,25 @@ const tryUploadFileToStorage = async (files,archiveFullData) => {
       });
     }
 
-  if(!Boolean(filesToUpload) || !Boolean(filesToUpload.length)) {
-    throw { status: 400, message: "Bad request" };
-  }
+    if (!Boolean(filesToUpload) || !Boolean(filesToUpload.length)) {
+      throw { status: 400, message: "Bad request" };
+    }
 
-  return await Promise.all(
-    filesToUpload.map( async (item) => {
-      try {
-        const resultStorage = await sendFileToStorage(item.file, item.URI, archiveFullData.metadata)
-        // console.log('resultStorage',resultStorage);        
-        
-        if (!Boolean(resultStorage)) {
-          throw { status: 500, message: "internal server error" };
+    return await Promise.all(
+      filesToUpload.map(async (item) => {
+        try {
+          const resultStorage = await sendFileToStorage(item.file, item.URI, archiveFullData.metadata)
+
+          if (!Boolean(resultStorage)) {
+            throw { status: 500, message: "internal server error" };
+          }
+
+          return resultStorage;
+        } catch (err) {
+          return { status: 500, message: "internal server error" };
         }
-        
-        return resultStorage;
-      } catch (err) {
-        return { status: 500, message: "internal server error" };
-      }
-    })
-  );
+      })
+    );
   } catch (err) {
     return err
   }

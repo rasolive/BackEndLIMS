@@ -2,40 +2,40 @@ require('dotenv').config()
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { Permissions } = require('../../../Models');
-const { create, update, findById, findList, remove} = require('../../../repositories');
+const { create, update, findById, findList, remove } = require('../../../repositories');
 const { INTERNALSERVERERROR, BADREQUEST } = require('../../../Globals/httpErros');
 const { errorLog } = require('../../../Globals/utils');
 
 exports.getRoles = async (req, res, next) => {
-	
+
 	const email = req.body.email || req.user.email;
 
-		try{
-					
-			 const response = await Permissions.findOne({email})
-			 return res.send(response.role.map((node) => node.perfil));
+	try {
 
-		}catch(err){
+		const response = await Permissions.findOne({ email })
+		return res.send(response.role.map((node) => node.perfil));
 
-			return res.status(200).send(['Usuário não autorizado']);
-			
-		}
+	} catch (err) {
+
+		return res.status(200).send(['Usuário não autorizado']);
+
+	}
 
 }
 
 exports.findOne = async (req, res, next) => {
-	
+
 	const email = req.user.email
 
-		try{					
-			 const response = await Permissions.findOne({email})
-			 return res.send(response);
+	try {
+		const response = await Permissions.findOne({ email })
+		return res.send(response);
 
-		}catch(err){
+	} catch (err) {
 
-			return res.status(400).send({error:'failed'});
-			
-		}
+		return res.status(400).send({ error: 'failed' });
+
+	}
 
 }
 
@@ -45,20 +45,22 @@ exports.post = async (req, res, next) => {
 	const user = req.user.email;
 	const email = req.body.email
 
-		try{
-			if (await Permissions.findOne({email})){
-				return res.status(412).send({error:'User already exists'});}
-				
-			else{
-			const response = await create(req.body, user, Permissions);
-			 
-			response.message.password =  undefined
-
-			return res.send(response);}
-
-		}catch(err){
-			return res.status(400).send({error:'Registation failed'});
+	try {
+		if (await Permissions.findOne({ email })) {
+			return res.status(412).send({ error: 'User already exists' });
 		}
+
+		else {
+			const response = await create(req.body, user, Permissions);
+
+			response.message.password = undefined
+
+			return res.send(response);
+		}
+
+	} catch (err) {
+		return res.status(400).send({ error: 'Registation failed' });
+	}
 
 }
 
@@ -68,8 +70,6 @@ exports.put = async (req, res, next) => {
 
 	const body = req.body
 	body.user = req.user.email
-
-	console.log('body', body)
 
 
 	const returnList = await update(req.params.id, req.body, Permissions);
@@ -82,14 +82,14 @@ exports.put = async (req, res, next) => {
 		}
 	} catch (error) {
 		return (
-			next(errorLog("put.catch "+error, (error && error.status) ? error : INTERNALSERVERERROR))
+			next(errorLog("put.catch " + error, (error && error.status) ? error : INTERNALSERVERERROR))
 		)
 	}
 }
 
 // GET list
 exports.getList = async (req, res, next) => {
-    try {
+	try {
 		//const { tokenUser } = res.session;
 
 		const returnList = await findList({}, Permissions);
@@ -106,21 +106,21 @@ exports.getList = async (req, res, next) => {
 // GET by ID
 exports.getById = async (req, res, next) => {
 	try {
-		
-        const validate = [ req.params.id ];
+
+		const validate = [req.params.id];
 
 		if (!validate.every(item => Boolean(item) === true)) {
 			throw BADREQUEST;
 		}
-        
-        const options = {}
+
+		const options = {}
 		Object.assign(options, { active: true })
 		Object.assign(options, req.query || {})
-		delete options.token;        
+		delete options.token;
 
 		const returnList = await findById(req.params.id, options, Permissions);
-		
-        if (!returnList) return res.json({}).end();
+
+		if (!returnList) return res.json({}).end();
 
 		return res.json(returnList).end();
 
@@ -136,13 +136,13 @@ exports.getById = async (req, res, next) => {
 exports.deleteById = async (req, res, next) => {
 	try {
 
-		const validate = [ req.params.id ];
+		const validate = [req.params.id];
 
 		if (!validate.every(item => Boolean(item) === true)) {
 			throw BADREQUEST;
 		}
 
-		Object.assign(req.body, {user: "Usuário de alteração"})
+		Object.assign(req.body, { user: "Usuário de alteração" })
 		const returnList = await remove(req.params.id, req.body, Permissions);
 
 		if (returnList) {
@@ -152,7 +152,7 @@ exports.deleteById = async (req, res, next) => {
 		}
 	} catch (error) {
 		return (
-			next(errorLog("delete.catch "+error, (error && error.status) ? error : INTERNALSERVERERROR))
+			next(errorLog("delete.catch " + error, (error && error.status) ? error : INTERNALSERVERERROR))
 		)
 	}
 }
