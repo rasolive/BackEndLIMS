@@ -6,6 +6,7 @@ const Fornecedores = require('../API/v1/Fornecedores/model');
 const Analysis = require('../API/v1/Analysis/model');
 const AnalysisMethod = require('../API/v1/AnalysisMethod/model');
 const Specification = require('../API/v1/Specification/model');
+const Permissions = require('../API/v1/Permissions/model');
 
 const models = {
     Lotes,
@@ -16,6 +17,7 @@ const models = {
     Analysis,
     AnalysisMethod,
     Specification,
+    Permissions,
 };
 
 module.exports = models;
