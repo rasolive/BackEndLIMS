@@ -5,6 +5,8 @@ const { Users} = require('../../../Models');
 const { create, update, findById, findList, remove } = require('../../../repositories');
 const { INTERNALSERVERERROR, BADREQUEST } = require('../../../Globals/httpErros');
 const { errorLog } = require('../../../Globals/utils');
+const {OAuth2Client} = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 function generateToken(params={}){
 	return jwt.sign(params, process.env.JWT_SECRET, {expiresIn: 3600*5});
@@ -126,11 +128,50 @@ exports.authenticate = async (req, res, next) => {
 
 exports.authenticateGoogleUser = async (req, res, next) => {
 
-	const {email} = req.body
 
-	const user = await Users.findOne({email})
+	const {tokenId} = req.body
+
+	async function verify() {
+		const ticket = await client.verifyIdToken({
+			idToken: tokenId,
+			audience: process.env.GOOGLE_CLIENT_ID,
+		});
+		const payload = ticket.getPayload();
+		console.log("payload", payload)
+		
+		if (payload.email_verified) {
+			const email = payload.email;
+			const user = await Users.findOne({email})
+			if (user){
+				console.log("user", user)
+
+				return res.send({token: generateToken({id: user._id, name: user.name, email: user.email, role: user.role.map((node) => node.perfil), validPass: user.validPass}) });
+
+			}else{
+
+				const body = {
+					name: payload.name,
+					email: payload.email,
+					password: "",
+					validPass: true,
+					role: [{id: "4zlemf88g", perfil: "V"}]
+				}
+
+				const response = await create(body, payload.email, Users);
+
+				response.message.password =  undefined
+				console.log("response", response)
+
+				return res.send({token: generateToken({id: response.message._id, name: response.message.name, email: response.message.email, role: response.message.role.map((node) => node.perfil), validPass: response.message.validPass}) });
+			}
+		}
+
+	  }
+	  verify().catch(console.error);
+ 
+	// const user = await Users.findOne({email})
 	
-	res.send({token: generateToken({id: user._id, name: user.name, email: user.email, role: user.role.map((node) => node.perfil), validPass: user.validPass}) });
+	// res.send({token: generateToken({id: user._id, name: user.name, email: user.email, role: user.role.map((node) => node.perfil), validPass: user.validPass}) });
 
 }
 
