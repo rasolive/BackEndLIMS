@@ -13,7 +13,7 @@ const Suppliers = new Schema({
 	numero: String,
 	bairro: String,
 	cidade: String,
-	estado: String,
+	estado: {type: String, ref: 'estados'},
 	cep: String,
 	telefone: String,
 	email: String,

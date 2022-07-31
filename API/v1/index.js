@@ -14,5 +14,6 @@ router.use('/analysis', require('./Analysis'));
 router.use('/analysismethod', require('./AnalysisMethod'));
 router.use('/specification', require('./Specification'));
 router.use('/permissions', require('./Permissions'));
+router.use('/estados', require('./Estados'));
 
 module.exports = router;
