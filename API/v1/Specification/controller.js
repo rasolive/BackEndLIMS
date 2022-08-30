@@ -3,6 +3,23 @@ const { create, update, findById, findList, remove, findOne } = require('../../.
 const { INTERNALSERVERERROR, BADREQUEST } = require('../../../Globals/httpErros');
 const { errorLog } = require('../../../Globals/utils');
 
+exports.findOne = async (req, res, next) => {
+	
+	const material = req.body.material || ''
+
+		try{
+					
+			 const response = await Specification.findOne({'material': material})
+			 return res.send(response);
+
+		}catch(err){
+
+			return res.status(400).send({error:'failed'});
+			
+		}
+
+}
+
 // POST
 exports.post = async (req, res, next) => {
 
