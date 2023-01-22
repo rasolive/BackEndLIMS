@@ -16,5 +16,6 @@ router.use('/specification', require('./Specification'));
 router.use('/permissions', require('./Permissions'));
 router.use('/estados', require('./Estados'));
 router.use('/contato', require('./Contato'));
+router.use('/email', require('./Email'));
 
 module.exports = router;
