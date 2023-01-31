@@ -2,6 +2,7 @@ const { Lotes } = require('../../../Models');
 const { create, update, findById, findList, remove } = require('../../../repositories');
 const { INTERNALSERVERERROR, BADREQUEST } = require('../../../Globals/httpErros');
 const { errorLog } = require('../../../Globals/utils');
+const { parseTwoDigitYear } = require('moment/moment');
 
 // POST
 exports.post = async (req, res, next) => {
@@ -49,10 +50,16 @@ try {
 
 // GET list
 exports.getList = async (req, res, next) => {
+	let today = new Date().toISOString().slice(0, 10)
 try {
 	//const { tokenUser } = res.session;
 	if (req.query.statusLote) {
-	statusLote = { statusLote: req.query.statusLote }}
+		
+	statusLote = { statusLote: req.query.statusLote, validade: {$gt: today }}
+	}
+	else if(req.query.vencidos){
+		statusLote = {validade: {$lte: today }}
+	}
 	else {statusLote = {}}
 
 	const returnList = await findList(statusLote || {}, Lotes, [{path:'material', select:['name']}, {path:'fornecedor', select:['name']}]);
@@ -84,6 +91,12 @@ try {
 	const returnList = await findById(req.params.id, options, Lotes);
 	
 	if (!returnList) return res.json({}).end();
+
+	let today = new Date().toISOString().slice(0, 10)
+	
+	checkVal = returnList.validade <= today
+
+	if (checkVal) returnList.statusLote = 'V'
 
 	return res.json(returnList).end();
 
