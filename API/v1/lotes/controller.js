@@ -58,7 +58,7 @@ try {
 	statusLote = { statusLote: req.query.statusLote, validade: {$gt: today }}
 	}
 	else if(req.query.vencidos){
-		statusLote = {validade: {$lt: today }}
+		statusLote = {validade: {$lte: today }}
 	}
 	else {statusLote = {}}
 
