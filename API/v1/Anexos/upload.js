@@ -11,14 +11,14 @@ const storage = new Storage({
   credentials: JSON.parse(process.env.GCP_CONFIG_PATH),
 });
 
-const UPLOAD_MAX_SIZE = process.env.GCP_UPLOAD_MAX_SIZE * 1000000;
+const UPLOAD_MAX_SIZE = process.env.GCP_UPLOAD_MAX_SIZE * 1024 * 1024;
 
-const MB = 90;
+const MB = 5;
 const propsToCreateBlacklist = {
   group: "workflow",
   label: 'WAIT FOR LABEL',
   extBlackList: ["exe", "bat"],
-  maxSize: (MB * 1024),
+  maxSize: (MB * 1024 * 1024),
 }
 
 module.exports.post = async (req, res, next) => {
