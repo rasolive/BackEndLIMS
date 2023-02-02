@@ -178,6 +178,57 @@
             }
         },
         "/fornecedores": {
+            "post": {
+                "summary": "Cadastro de Fornecedores",
+                "description": "Essa rota realiza o cadstro de Fornecedores",
+                "tags": [
+                    "Fornecedores"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/fornecedores"
+                            },
+                            "examples": {
+                                "Criar Forneecedor": {
+                                    "value": {
+                                        "bairro": "bairro",
+                                        "cep": "00000-000",
+                                        "cidade": "cidade",
+                                        "cnpj": "00.000.000/0000-03",
+                                        "email": "email@email.com",
+                                        "estado": "SP",
+                                        "name": "nome do fornecedor",
+                                        "numero": 1,
+                                        "rua": "rua",
+                                        "telefone": "(99) 9 9999-9999"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel criar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "412": {
+                        "description": "Fornecedor já existe"
+                    },
+                    "200": {
+                        "description": "Fornecedore Cadastrado"
+                    }
+                }
+            },
             "get": {
                 "summary": "Lista de fornecedores cadastrados",
                 "description": "Essa rota realiza a busca de fornecedores cadastrados no banco",
@@ -206,12 +257,97 @@
                 "tags": [
                     "Fornecedores"
                 ],
-                "parameters": [{
-                    "name": "_id",
-                    "in": "path",
-                    "description": "id do fornecedor",
-                    "required": true
-                }],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do fornecedor",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Cadastro de Fornecedores",
+                "description": "Essa rota realiza o cadstro de Fornecedores",
+                "tags": [
+                    "Fornecedores"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do fornecedor",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/fornecedores"
+                            },
+                            "examples": {
+                                "Criar Forneecedor": {
+                                    "value": {
+                                        "bairro": "bairro",
+                                        "cep": "00000-000",
+                                        "cidade": "cidade",
+                                        "email": "email@email.com",
+                                        "estado": "SP",
+                                        "name": "nome do fornecedor",
+                                        "numero": 1,
+                                        "rua": "rua",
+                                        "telefone": "(99) 9 9999-9999"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel atualizar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar fornecedor por \"id\"",
+                "description": "Essa rota deleta um fornecedor especifico",
+                "tags": [
+                    "Fornecedores"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do fornecedor",
+                        "required": true
+                    }
+                ],
                 "security": [
                     {
                         "JWT": []
@@ -226,9 +362,9 @@
                     }
                 }
             }
+           
         }
     },
-    
     "components": {
         "schemas": {
             "users": {
@@ -331,13 +467,13 @@
                 }
             }
         },
-            "securitySchemes": {
-                "JWT": {
-                    "description": "",
-                    "type": "apiKey",
-                    "name": "Authorization",
-                    "in": "header"
-                }
+        "securitySchemes": {
+            "JWT": {
+                "description": "",
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
             }
+        }
     }
 }
