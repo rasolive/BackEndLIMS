@@ -25,117 +25,213 @@
                 "description": "Essa rota realiza teste da aplicação",
                 "tags": [
                     "Health"
-                ],"responses": {
-                        "400": {
-                            "description": "Não foi possivel criar"
-                        },
-                        "200": {
-                            "description": "ok"
-                        }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
                 }
             }
-         } ,
-        "/reagents": {
+        },
+        "/contato": {
             "post": {
-                "summary": "Cadastro de Reagentes",
-                "description": "Essa rota realiza o cadstro de Reagentes no Banco",
+                "summary": "Formulário de contato",
+                "description": "Essa rota realiza envio de mensagem para o administrador",
                 "tags": [
-                    "Reagentes"
+                    "Formulário de contato"
                 ],
                 "requestBody": {
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Reagents"
+                                "$ref": "#/components/schemas/form"
                             },
                             "examples": {
-                                "reagent": {
+                                "usuário": {
                                     "value": {
-                                        "_id": 11,
-                                        "active": true,
-                                        "cod": 2525,
-                                        "name": "H2SO4",
-                                        "aparence": "Sólido",
-                                        "user": "Nome do Usuario"
+                                        "msg": "mensagem",
+                                        "name": "nome",
+                                        "email": "email@email.com"
                                     }
                                 }
                             }
                         }
                     }
-                    
-                    },"responses": {
-                        "400": {
-                            "description": "Não foi possivel criar"
-                        },
-                        "200": {
-                            "description": "ok"
-                        }
-                }
-            },
-            "get": {
-                "summary": "Busca de Reagentes Cadastrados",
-                "description": "Essa rota realiza a de Reagentes no Banco",
-                "tags": [
-                    "Reagentes"
-                ],
+                },
                 "responses": {
-                        "400": {
-                            "description": "Não foi possivel criar"
-                        },
-                        "200": {
-                            "description": "ok"
-                        }
+                    "400": {
+                        "description": "Não foi possível enviar"
+                    },
+                    "200": {
+                        "description": "Formulário enviado com sucesso"
+                    }
                 }
             }
         },
-        "/reagents/{_id}": {
-            "put": {
-                "summary": "Atualização de dados de Reagentes",
-                "description": "Essa rota realiza atualização de Reagentes no Banco",
+        "/auth/createUser": {
+            "post": {
+                "summary": "Cadastro de Usuário",
+                "description": "Essa rota realiza o cadstro de usuário pelo próprio usuário",
                 "tags": [
-                    "Reagentes"
+                    "Autenticação"
                 ],
-                "parameters": [{
-
-                    "name": "_id",
-                    "in": "path",
-                    "description":"ID do reagente a ser alterado",
-                    "required": true
-
-                    }],
-                    "requestBody": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Reagents"
-                                },
-                                "examples": {
-                                    "reagent": {
-                                        "value": {
-                                            "active": true,
-                                            "cod": 5555,
-                                            "name": "H2SO4",
-                                            "aparence": "Sólido",
-                                            "user": "Nome do Usuario"
-                                        }
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/users"
+                            },
+                            "examples": {
+                                "create user": {
+                                    "value": {
+                                        "email": "email@email.com",
+                                        "name": "nome",
+                                        "password": "senha",
+                                        "validPass": true
                                     }
                                 }
                             }
                         }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel criar"
                     },
-                    "responses": {
-                        "400": {
-                            "description": "Não foi possivel criar"
-                        },
-                        "200": {
-                            "description": "ok"
-                        }
+                    "412": {
+                        "description": "Usuário já existe"
+                    },
+                    "200": {
+                        "description": "Usuário criado"
+                    }
                 }
             }
-    }},
+        },
+        "/auth/authenticate": {
+            "post": {
+                "summary": "Autenticação de usuário",
+                "description": "Essa rota realiza autenticação do usuário",
+                "tags": [
+                    "Autenticação"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/users"
+                            },
+                            "examples": {
+                                "usuário": {
+                                    "value": {
+                                        "email": "rasolive",
+                                        "password": "0532291"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Usuário não encintrado no banco de dados"
+                    },
+                    "401": {
+                        "description": "Senha incorreta"
+                    },
+                    "200": {
+                        "description": "Usuário Autenticado"
+                    }
+                }
+            }
+        },
+        "/email/forgotPassword": {
+            "post": {
+                "summary": "Reset de senha",
+                "description": "Essa rota realiza o envio de uma nova senha por e-mail",
+                "tags": [
+                    "Autenticação"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/users"
+                            },
+                            "examples": {
+                                "send e-mail": {
+                                    "value": {
+                                        "email": "email@email.com"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Usuário não encintrado no banco de dados"
+                    },
+                    "200": {
+                        "description": "e-mail enviado"
+                    }
+                }
+            }
+        },
+        "/fornecedores": {
+            "get": {
+                "summary": "Lista de fornecedores cadastrados",
+                "description": "Essa rota realiza a busca de fornecedores cadastrados no banco",
+                "tags": [
+                    "Fornecedores"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/fornecedores/{_id}": {
+            "get": {
+                "summary": "Busca de foencedor por \"id\"",
+                "description": "Essa rota realiza a busca de fornecedor especifico",
+                "tags": [
+                    "Fornecedores"
+                ],
+                "parameters": [{
+                    "name": "_id",
+                    "in": "path",
+                    "description": "id do fornecedor",
+                    "required": true
+                }],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        }
+    },
+    
     "components": {
         "schemas": {
-            "Reagents": {
+            "users": {
                 "type": "object",
                 "properties": {
                     "_id": {
@@ -144,23 +240,104 @@
                     "active": {
                         "type": "Boolean"
                     },
-                    "cod": {
+                    "name": {
+                        "type": "String"
+                    },
+                    "email": {
+                        "type": "String"
+                    },
+                    "password": {
+                        "type": "String"
+                    },
+                    "validPass": {
+                        "type": "Boolean"
+                    },
+                    "role": {
+                        "type": "Array"
+                    },
+                    "createdBy": {
+                        "type": "String"
+                    },
+                    "updatedBy": {
+                        "type": "String"
+                    }
+                }
+            },
+            "form": {
+                "type": "object",
+                "properties": {
+                    "_id": {
                         "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
                     },
                     "name": {
                         "type": "String"
                     },
-                    "aparence": {
+                    "email": {
                         "type": "String"
                     },
-                    "user": {
+                    "msg": {
+                        "type": "String"
+                    }
+                }
+            },
+            "fornecedores": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
+                    },
+                    "name": {
+                        "type": "String"
+                    },
+                    "rua": {
+                        "type": "String"
+                    },
+                    "numero": {
+                        "type": "String"
+                    },
+                    "bairro": {
+                        "type": "String"
+                    },
+                    "cidade": {
+                        "type": "String"
+                    },
+                    "estado": {
+                        "type": "String"
+                    },
+                    "cep": {
+                        "type": "String"
+                    },
+                    "telefone": {
+                        "type": "String"
+                    },
+                    "email": {
+                        "type": "String"
+                    },
+                    "cnpj": {
+                        "type": "String"
+                    },
+                    "createdBy": {
+                        "type": "String"
+                    },
+                    "updatedBy": {
                         "type": "String"
                     }
                 }
             }
-        }
+        },
+            "securitySchemes": {
+                "JWT": {
+                    "description": "",
+                    "type": "apiKey",
+                    "name": "Authorization",
+                    "in": "header"
+                }
+            }
     }
 }
-
-
-
