@@ -362,7 +362,182 @@
                     }
                 }
             }
-           
+        },
+        "/materiais": {
+            "post": {
+                "summary": "Cadastro de Materiais",
+                "description": "Essa rota realiza o cadstro de Materiais",
+                "tags": [
+                    "Materiais"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/materiais"
+                            },
+                            "examples": {
+                                "Criar Material": {
+                                    "value": {
+                                        "armazenamento": "A",
+                                        "material": [
+                                            1,
+                                            11
+                                        ],
+                                        "name": "material x",
+                                        "statusMaterial": "L",
+                                        "umb": "G"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel criar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "412": {
+                        "description": "Matrial já existe"
+                    },
+                    "200": {
+                        "description": "Matrial Cadastrado"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lista de materiais cadastrados",
+                "description": "Essa rota realiza a busca de materiais cadastrados no banco",
+                "tags": [
+                    "Materiais"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/materiais/{_id}": {
+            "get": {
+                "summary": "Busca de material por \"id\"",
+                "description": "Essa rota realiza a busca de material especifico",
+                "tags": [
+                    "Materiais"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do material",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Cadastro de Materiais",
+                "description": "Essa rota realiza o cadstro de Materiais",
+                "tags": [
+                    "Materiais"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do material",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/materiais"
+                            },
+                            "examples": {
+                                "Criar Material": {
+                                    "value": {
+                                        "name": "material y"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel atualizar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar material por \"id\"",
+                "description": "Essa rota deleta um material especifico",
+                "tags": [
+                    "Materiais"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do material",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -456,6 +631,41 @@
                         "type": "String"
                     },
                     "cnpj": {
+                        "type": "String"
+                    },
+                    "createdBy": {
+                        "type": "String"
+                    },
+                    "updatedBy": {
+                        "type": "String"
+                    }
+                }
+            },
+            "materiais": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
+                    },
+                    "cod": {
+                        "type": "String"
+                    },
+                    "name": {
+                        "type": "String"
+                    },
+                    "armazenamento": {
+                        "type": "String"
+                    },
+                    "statusMaterial": {
+                        "type": "String"
+                    },
+                    "fornecedor": {
+                        "type": "Array"
+                    },
+                    "umb": {
                         "type": "String"
                     },
                     "createdBy": {
