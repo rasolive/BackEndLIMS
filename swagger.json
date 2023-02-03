@@ -1047,6 +1047,314 @@
                     }
                 }
             }
+        },
+        "/specification": {
+            "post": {
+                "summary": "Cadastro de Especificações",
+                "description": "Essa rota realiza o cadstro de Especificações",
+                "tags": [
+                    "Especificações"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/specification"
+                            },
+                            "examples": {
+                                "Criar Especificação": {
+                                    "value": {
+                                        "material": 15,
+                                        "specification": [
+                                            {
+                                                "_id": 1,
+                                                "active": true,
+                                                "AnalysisType": "Qualitativa",
+                                                "name": "cor",
+                                                "AnalysisMethod": "MA-0002",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:12.674Z",
+                                                "updatedAt": "2022-06-28T23:06:07.520Z",
+                                                "id": 1,
+                                                "__v": 0,
+                                                "updatedBy": "rasolive@gmail.com"
+                                            },
+                                            {
+                                                "_id": 2,
+                                                "active": true,
+                                                "AnalysisType": "Qualitativa",
+                                                "name": "Odor",
+                                                "AnalysisMethod": "MA-0004",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:29.731Z",
+                                                "updatedAt": "2022-06-28T21:14:29.731Z",
+                                                "id": 2,
+                                                "__v": 0
+                                            },
+                                            {
+                                                "_id": 3,
+                                                "active": true,
+                                                "name": "Aparência",
+                                                "AnalysisMethod": "MA-0005",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:42.624Z",
+                                                "updatedAt": "2022-06-28T21:15:32.587Z",
+                                                "id": 3,
+                                                "__v": 0,
+                                                "AnalysisType": "Qualitativa",
+                                                "updatedBy": "rasolive@gmail.com"
+                                            },
+                                            {
+                                                "_id": 4,
+                                                "active": true,
+                                                "AnalysisType": "Quantitativa",
+                                                "name": "pH",
+                                                "AnalysisMethod": "MA-0001",
+                                                "unit": "ph",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:53.334Z",
+                                                "updatedAt": "2022-06-28T21:14:53.334Z",
+                                                "id": 4,
+                                                "__v": 0,
+                                                "min": "4",
+                                                "max": "6"
+                                            },
+                                            {
+                                                "_id": 6,
+                                                "active": true,
+                                                "AnalysisType": "Quantitativa",
+                                                "name": "Densidade",
+                                                "AnalysisMethod": "MA-1008",
+                                                "unit": "g/ml",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:15:25.128Z",
+                                                "updatedAt": "2022-07-01T17:51:58.096Z",
+                                                "id": 6,
+                                                "__v": 0,
+                                                "updatedBy": "rasolive@gmail.com",
+                                                "min": "0.89",
+                                                "max": "1.01"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel criar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Especificação Cadastrada"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lista de especificações cadastradas",
+                "description": "Essa rota realiza a busca de especificações cadastradas no banco",
+                "tags": [
+                    "Especificações"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/specification/{_id}": {
+            "get": {
+                "summary": "Busca de especificação por \"id\"",
+                "description": "Essa rota realiza a busca de especificação especifica",
+                "tags": [
+                    "Especificações"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da especificação",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Cadastro de Especificações",
+                "description": "Essa rota realiza o cadstro de Especificações",
+                "tags": [
+                    "Especificações"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da especificação",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/specification"
+                            },
+                            "examples": {
+                                "Atualizar Especificação": {
+                                    "value": {
+                                        "material": 15,
+                                        "specification": [
+                                            {
+                                                "_id": 1,
+                                                "active": true,
+                                                "AnalysisType": "Qualitativa",
+                                                "name": "cor",
+                                                "AnalysisMethod": "MA-0002",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:12.674Z",
+                                                "updatedAt": "2022-06-28T23:06:07.520Z",
+                                                "id": 1,
+                                                "__v": 0,
+                                                "updatedBy": "rasolive@gmail.com"
+                                            },
+                                            {
+                                                "_id": 2,
+                                                "active": true,
+                                                "AnalysisType": "Qualitativa",
+                                                "name": "Odor",
+                                                "AnalysisMethod": "MA-0004",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:29.731Z",
+                                                "updatedAt": "2022-06-28T21:14:29.731Z",
+                                                "id": 2,
+                                                "__v": 0
+                                            },
+                                            {
+                                                "_id": 3,
+                                                "active": true,
+                                                "name": "Aparência",
+                                                "AnalysisMethod": "MA-0005",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:42.624Z",
+                                                "updatedAt": "2022-06-28T21:15:32.587Z",
+                                                "id": 3,
+                                                "__v": 0,
+                                                "AnalysisType": "Qualitativa",
+                                                "updatedBy": "rasolive@gmail.com"
+                                            },
+                                            {
+                                                "_id": 4,
+                                                "active": true,
+                                                "AnalysisType": "Quantitativa",
+                                                "name": "pH",
+                                                "AnalysisMethod": "MA-0001",
+                                                "unit": "ph",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:53.334Z",
+                                                "updatedAt": "2022-06-28T21:14:53.334Z",
+                                                "id": 4,
+                                                "__v": 0,
+                                                "min": "4",
+                                                "max": "6"
+                                            },
+                                            {
+                                                "_id": 6,
+                                                "active": true,
+                                                "AnalysisType": "Quantitativa",
+                                                "name": "Densidade",
+                                                "AnalysisMethod": "MA-1008",
+                                                "unit": "g/ml",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:15:25.128Z",
+                                                "updatedAt": "2022-07-01T17:51:58.096Z",
+                                                "id": 6,
+                                                "__v": 0,
+                                                "updatedBy": "rasolive@gmail.com",
+                                                "min": "0.89",
+                                                "max": "1.01"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel atualizar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar especificação por \"id\"",
+                "description": "Essa rota deleta um especificação especifica",
+                "tags": [
+                    "Especificações"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da especificação",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -1290,6 +1598,32 @@
                     },
                     " unit": {
                         "type": "String"
+                    },
+                    "createdBy": {
+                        "type": "String"
+                    },
+                    "updatedBy": {
+                        "type": "String"
+                    }
+                }
+            },
+            "specification": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
+                    },
+                    "material": {
+                        "type": "Number",
+                        "ref": "Materiais",
+                        "required": true,
+                        "unique": true
+                    },
+                    "specification": {
+                        "type": "Array"
                     },
                     "createdBy": {
                         "type": "String"
