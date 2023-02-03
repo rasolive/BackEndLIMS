@@ -10,13 +10,14 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8089/v1",
-            "description": "Url Local DEV"
+            "url": "https://applims-back-node.herokuapp.com/v1",
+            "description": "PRD"
         },
         {
-            "url": "inserir url prd",
-            "description": "Url Local PRD"
+            "url": "http://localhost:8089/v1",
+            "description": "Local DEV"
         }
+
     ],
     "paths": {
         "/health": {
@@ -28,7 +29,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "ok"
+                        "description": "Aplicação no ar e acessível"
+                    },
+                    "400": {
+                        "description": "Not Found"
                     }
                 }
             }
