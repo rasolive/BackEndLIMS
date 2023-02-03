@@ -102,7 +102,7 @@
                         "description": "Usuário já existe"
                     },
                     "200": {
-                        "description": "Usuário criado"
+                        "description": "Usuário Cadastrado com sucesso"
                     }
                 }
             }
@@ -123,8 +123,8 @@
                             "examples": {
                                 "usuário": {
                                     "value": {
-                                        "email": "rasolive",
-                                        "password": "0532291"
+                                        "email": "email@email.com",
+                                        "password": "password"
                                     }
                                 }
                             }
@@ -133,13 +133,13 @@
                 },
                 "responses": {
                     "400": {
-                        "description": "Usuário não encintrado no banco de dados"
+                        "description": "Usuário não encontrado no banco de dados"
                     },
                     "401": {
                         "description": "Senha incorreta"
                     },
                     "200": {
-                        "description": "Usuário Autenticado"
+                        "description": "Usuário Autenticado com sucesso"
                     }
                 }
             }
@@ -169,10 +169,10 @@
                 },
                 "responses": {
                     "400": {
-                        "description": "Usuário não encintrado no banco de dados"
+                        "description": "Usuário não encontrado no banco de dados"
                     },
                     "200": {
-                        "description": "e-mail enviado"
+                        "description": "e-mail enviado com sucesso"
                     }
                 }
             }
@@ -366,7 +366,7 @@
         "/materiais": {
             "post": {
                 "summary": "Cadastro de Materiais",
-                "description": "Essa rota realiza o cadstro de Materiais",
+                "description": "Essa rota realiza o cadastro de Materiais",
                 "tags": [
                     "Materiais"
                 ],
@@ -385,7 +385,7 @@
                                 "Criar Material": {
                                     "value": {
                                         "armazenamento": "A",
-                                        "material": [
+                                        "fornecedor": [
                                             1,
                                             11
                                         ],
@@ -405,11 +405,8 @@
                     "401": {
                         "description": "Token não disponibilizado/inválido"
                     },
-                    "412": {
-                        "description": "Matrial já existe"
-                    },
                     "200": {
-                        "description": "Matrial Cadastrado"
+                        "description": "Matrial Cadastrado com sucesso"
                     }
                 }
             },
@@ -465,7 +462,7 @@
             },
             "put": {
                 "summary": "Cadastro de Materiais",
-                "description": "Essa rota realiza o cadstro de Materiais",
+                "description": "Essa rota realiza o atualização de Materiais",
                 "tags": [
                     "Materiais"
                 ],
@@ -542,7 +539,7 @@
         "/lotes": {
             "post": {
                 "summary": "Cadastro de Lotes",
-                "description": "Essa rota realiza o cadstro de Lotes",
+                "description": "Essa rota realiza o cadastro de Lotes",
                 "tags": [
                     "Lotes"
                 ],
@@ -580,7 +577,7 @@
                         "description": "Token não disponibilizado/inválido"
                     },
                     "200": {
-                        "description": "Lote Cadastrado"
+                        "description": "Lote Cadastrado com sucesso"
                     }
                 }
             },
@@ -908,7 +905,7 @@
         "/analysisMethod": {
             "post": {
                 "summary": "Cadastro de Métodos de Analises",
-                "description": "Essa rota realiza o cadstro de Métodos de Analises",
+                "description": "Essa rota realiza o cadastro de Métodos de Analises",
                 "tags": [
                     "Métodos de Analises"
                 ],
@@ -1077,7 +1074,7 @@
         "/analysis": {
             "post": {
                 "summary": "Cadastro de Analises",
-                "description": "Essa rota realiza o cadstro de Analises",
+                "description": "Essa rota realiza o cadastro de Analises",
                 "tags": [
                     "Analises"
                 ],
@@ -1112,8 +1109,11 @@
                     "401": {
                         "description": "Token não disponibilizado/inválido"
                     },
+                    "412": {
+                        "description": "Analise já existe"
+                    },
                     "200": {
-                        "description": "Analise Cadastrada"
+                        "description": "Analise Cadastrada com sucesso"
                     }
                 }
             },
@@ -1169,7 +1169,7 @@
             },
             "put": {
                 "summary": "Cadastro de Analises",
-                "description": "Essa rota realiza o cadstro de Analises",
+                "description": "Essa rota realiza o atualização de Analises",
                 "tags": [
                     "Analises"
                 ],
@@ -1246,7 +1246,7 @@
         "/specification": {
             "post": {
                 "summary": "Cadastro de Especificações",
-                "description": "Essa rota realiza o cadstro de Especificações",
+                "description": "Essa rota realiza o cadastro de Especificações",
                 "tags": [
                     "Especificações"
                 ],
@@ -1349,8 +1349,11 @@
                     "401": {
                         "description": "Token não disponibilizado/inválido"
                     },
+                    "412": {
+                        "description": "Eespecificação já existe"
+                    },
                     "200": {
-                        "description": "Especificação Cadastrada"
+                        "description": "Especificação Cadastrada com sucesso"
                     }
                 }
             },
@@ -1432,7 +1435,6 @@
                             "examples": {
                                 "Atualizar Especificação": {
                                     "value": {
-                                        "material": 15,
                                         "specification": [
                                             {
                                                 "_id": 1,
@@ -1554,7 +1556,7 @@
         "/listas": {
             "post": {
                 "summary": "Cadastro de Listas",
-                "description": "Essa rota realiza o cadstro de Listas",
+                "description": "Essa rota realiza o cadastro de Listas",
                 "tags": [
                     "Listas"
                 ],
@@ -1689,7 +1691,18 @@
                             "examples": {
                                 "Atualizar Lista": {
                                     "value": {
-                                        "name": "lista y"
+                                        "lista": [
+                                            {
+                                                "id": "qyc0d5kfg",
+                                                "valor": "Em Criação",
+                                                "chave": "C"
+                                            },
+                                            {
+                                                "id": "b5efh01it",
+                                                "valor": "Em Linha",
+                                                "chave": "L"
+                                            }
+                                        ]
                                     }
                                 }
                             }
@@ -1740,7 +1753,7 @@
         "/users": {
             "post": {
                 "summary": "Cadastro de Usuários",
-                "description": "Essa rota realiza o cadstro de Usuários",
+                "description": "Essa rota realiza o cadastro de Usuários",
                 "tags": [
                     "Usuários"
                 ],
@@ -1785,7 +1798,7 @@
                         "description": "Usuário já existe"
                     },
                     "200": {
-                        "description": "usuário Cadastrado"
+                        "description": "usuário Cadastrado com sucesso"
                     }
                 }
             },
@@ -1928,19 +1941,26 @@
                         "type": "Boolean"
                     },
                     "name": {
-                        "type": "String"
+                        "type": "String",
+                        "required": true
                     },
                     "email": {
-                        "type": "String"
+                        "type": "String",
+                        "required": true,
+                        "unique": true,
+                        "lowercase": true
                     },
                     "password": {
-                        "type": "String"
+                        "type": "String",
+                        "select": false
                     },
                     "validPass": {
                         "type": "Boolean"
                     },
                     "role": {
-                        "type": "Array"
+                        "type": "Array",
+                        "default": {},
+                        "required": true
                     },
                     "createdBy": {
                         "type": "String"
@@ -1980,7 +2000,8 @@
                         "type": "Boolean"
                     },
                     "name": {
-                        "type": "String"
+                        "type": "String",
+                        "required": true
                     },
                     "rua": {
                         "type": "String"
@@ -1995,7 +2016,8 @@
                         "type": "String"
                     },
                     "estado": {
-                        "type": "String"
+                        "type": "String",
+                        "ref": "estados"
                     },
                     "cep": {
                         "type": "String"
@@ -2007,7 +2029,9 @@
                         "type": "String"
                     },
                     "cnpj": {
-                        "type": "String"
+                        "type": "String",
+                        "required": true,
+                        "unique": true
                     },
                     "createdBy": {
                         "type": "String"
@@ -2027,22 +2051,33 @@
                         "type": "Boolean"
                     },
                     "cod": {
-                        "type": "String"
+                        "type": "String",
+                        "required": true,
+                        "unique": true
                     },
                     "name": {
-                        "type": "String"
+                        "type": "String",
+                        "required": true
                     },
                     "armazenamento": {
-                        "type": "String"
+                        "type": "String",
+                        "ref": "listas",
+                        "required": true
                     },
                     "statusMaterial": {
-                        "type": "String"
+                        "type": "String",
+                        "ref": "listas",
+                        "required": true
                     },
                     "fornecedor": {
-                        "type": "Array"
+                        "type": "Array",
+                        "default": {},
+                        "ref": "fornecedores"
                     },
                     "umb": {
-                        "type": "String"
+                        "type": "String",
+                        "ref": "listas",
+                        "required": true
                     },
                     "createdBy": {
                         "type": "String"
@@ -2062,19 +2097,27 @@
                         "type": "Boolean"
                     },
                     "material": {
-                        "type": "Number"
+                        "type": "Number",
+                        "ref": "Materiais",
+                        "required": true
                     },
                     "fornecedor": {
-                        "type": "Number"
+                        "type": "Number",
+                        "ref": "Suppliers",
+                        "required": true
                     },
                     "lote": {
-                        "type": "String"
+                        "type": "String",
+                        "required": true,
+                        "unique": true
                     },
                     "loteFornecedor": {
-                        "type": "String"
+                        "type": "String",
+                        "required": true
                     },
                     "qtdInicial": {
-                        "type": "Number"
+                        "type": "Number",
+                        "required": true
                     },
                     "qtdAtual": {
                         "type": "Number"
@@ -2083,16 +2126,20 @@
                         "type": "String"
                     },
                     "validade": {
-                        "type": "String"
+                        "type": "String",
+                        "required": true
                     },
                     "statusLote": {
-                        "type": "String"
+                        "type": "String",
+                        "ref": "Listas"
                     },
                     "analysisResult": {
-                        "type": "Array"
+                        "type": "Array",
+                        "default": {}
                     },
                     "startedAnalysis": {
-                        "type": "Boolean"
+                        "type": "Boolean",
+                        "default": false
                     },
                     "createdBy": {
                         "type": "String"
@@ -2112,7 +2159,9 @@
                         "type": "Boolean"
                     },
                     "name": {
-                        "type": "String"
+                        "type": "String",
+                        "required": true,
+                        "unique": true
                     },
                     "description": {
                         "type": "String"
@@ -2147,16 +2196,22 @@
                         "type": "Boolean"
                     },
                     "AnalysisType": {
-                        "type": "String"
+                        "type": "String",
+                        "required": true
                     },
                     "name": {
-                        "type": "String"
+                        "type": "String",
+                        "required": true,
+                        "unique": true
                     },
                     "AnalysisMethod": {
-                        "type": "String"
+                        "type": "String",
+                        "ref": "AnalysisMethod",
+                        "required": true
                     },
-                    " unit": {
-                        "type": "String"
+                    "unit": {
+                        "type": "String",
+                        "ref": "listas"
                     },
                     "createdBy": {
                         "type": "String"
