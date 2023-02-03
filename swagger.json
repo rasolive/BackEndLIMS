@@ -538,6 +538,515 @@
                     }
                 }
             }
+        },
+        "/lotes": {
+            "post": {
+                "summary": "Cadastro de Lotes",
+                "description": "Essa rota realiza o cadstro de Lotes",
+                "tags": [
+                    "Lotes"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/lotes"
+                            },
+                            "examples": {
+                                "Criar Lote": {
+                                    "value": {
+                                        "fornecedor": "1",
+                                        "loteFornecedor": "xyz",
+                                        "material": "1",
+                                        "qtdInicial": 1000,
+                                        "statusLote": "Q",
+                                        "validade": "2023-03-24"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel criar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Lote Cadastrado"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lista de lotes cadastrados",
+                "description": "Essa rota realiza a busca de lotes cadastrados no banco",
+                "tags": [
+                    "Lotes"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/lotes/{_id}": {
+            "get": {
+                "summary": "Busca de lote por \"id\"",
+                "description": "Essa rota realiza a busca de lote especifico",
+                "tags": [
+                    "Lotes"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do lote",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Cadastro de Lotes",
+                "description": "Essa rota realiza o cadstro de Lotes",
+                "tags": [
+                    "Lotes"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do lote",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/lotes"
+                            },
+                            "examples": {
+                                "Criar Lote": {
+                                    "value": {
+                                        "qtdInicial": 2000
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel atualizar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar lote por \"id\"",
+                "description": "Essa rota deleta um lote especifico",
+                "tags": [
+                    "Lotes"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do lote",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/analysisMethod": {
+            "post": {
+                "summary": "Cadastro de Métodos de Analises",
+                "description": "Essa rota realiza o cadstro de Métodos de Analises",
+                "tags": [
+                    "Métodos de Analises"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/analysisMethod"
+                            },
+                            "examples": {
+                                "Criar Método": {
+                                    "value": {
+                                        "description": "nome da análise",
+                                        "process": "descrição do processo",
+                                        "ref": "referência",
+                                        "rev": 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel criar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Método Cadastrado"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lista de métodos cadastrados",
+                "description": "Essa rota realiza a busca de métodos cadastrados no banco",
+                "tags": [
+                    "Métodos de Analises"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/analysisMethod/{_id}": {
+            "get": {
+                "summary": "Busca de método por \"id\"",
+                "description": "Essa rota realiza a busca de método especifico",
+                "tags": [
+                    "Métodos de Analises"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do método",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Cadastro de Métodos de Analises",
+                "description": "Essa rota realiza o cadstro de Métodos de Analises",
+                "tags": [
+                    "Métodos de Analises"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do método",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/analysisMethod"
+                            },
+                            "examples": {
+                                "Atualizar Método": {
+                                    "value": {
+                                        "process": "nova descrição do processo"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel atualizar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar método por \"id\"",
+                "description": "Essa rota deleta um método especifico",
+                "tags": [
+                    "Métodos de Analises"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do método",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/analysis": {
+            "post": {
+                "summary": "Cadastro de Analises",
+                "description": "Essa rota realiza o cadstro de Analises",
+                "tags": [
+                    "Analises"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/analysis"
+                            },
+                            "examples": {
+                                "Criar Analise": {
+                                    "value": {
+                                        "AnalysisMethod": "MA-0001",
+                                        "AnalysisType": "Quantitativa",
+                                        "name": "nome da analise",
+                                        "unit": "mgKOH/g"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel criar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Analise Cadastrada"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lista de analises cadastradas",
+                "description": "Essa rota realiza a busca de analises cadastradas no banco",
+                "tags": [
+                    "Analises"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/analysis/{_id}": {
+            "get": {
+                "summary": "Busca de analise por \"id\"",
+                "description": "Essa rota realiza a busca de analise especifica",
+                "tags": [
+                    "Analises"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da analise",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Cadastro de Analises",
+                "description": "Essa rota realiza o cadstro de Analises",
+                "tags": [
+                    "Analises"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da analise",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/analysis"
+                            },
+                            "examples": {
+                                "Atualizar Analise": {
+                                    "value": {
+                                        "AnalysisMethod": "MA-0002"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel atualizar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar analise por \"id\"",
+                "description": "Essa rota deleta um analise especifica",
+                "tags": [
+                    "Analises"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da analise",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -666,6 +1175,120 @@
                         "type": "Array"
                     },
                     "umb": {
+                        "type": "String"
+                    },
+                    "createdBy": {
+                        "type": "String"
+                    },
+                    "updatedBy": {
+                        "type": "String"
+                    }
+                }
+            },
+            "lotes": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
+                    },
+                    "material": {
+                        "type": "Number"
+                    },
+                    "fornecedor": {
+                        "type": "Number"
+                    },
+                    "lote": {
+                        "type": "String"
+                    },
+                    "loteFornecedor": {
+                        "type": "String"
+                    },
+                    "qtdInicial": {
+                        "type": "Number"
+                    },
+                    "qtdAtual": {
+                        "type": "Number"
+                    },
+                    "unidade": {
+                        "type": "String"
+                    },
+                    "validade": {
+                        "type": "String"
+                    },
+                    "statusLote": {
+                        "type": "String"
+                    },
+                    "analysisResult": {
+                        "type": "Array"
+                    },
+                    "startedAnalysis": {
+                        "type": "Boolean"
+                    },
+                    "createdBy": {
+                        "type": "String"
+                    },
+                    "updatedBy": {
+                        "type": "String"
+                    }
+                }
+            },
+            "analysisMethod": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
+                    },
+                    "name": {
+                        "type": "String"
+                    },
+                    "description": {
+                        "type": "String"
+                    },
+                    "rev": {
+                        "type": "Number"
+                    },
+                    "process": {
+                        "type": "String"
+                    },
+                    "ref": {
+                        "type": "String"
+                    },
+                    "createdBy": {
+                        "type": "String"
+                    },
+                    "updatedBy": {
+                        "type": "String"
+                    }
+                }
+            },
+            "analysis": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "Number"
+                    },
+                    "_id": {
+                        "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
+                    },
+                    "AnalysisType": {
+                        "type": "String"
+                    },
+                    "name": {
+                        "type": "String"
+                    },
+                    "AnalysisMethod": {
+                        "type": "String"
+                    },
+                    " unit": {
                         "type": "String"
                     },
                     "createdBy": {
