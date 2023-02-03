@@ -43,8 +43,11 @@ app.use(bodyParser.urlencoded({ extended: true, limit: REQ_SIZE_LIMIT }));
 // Handlers
 app.use('/health', health); // global health reporter for k8s
 app.use('/v1', API_v1); // main API v1
-app.use('/swaggerNode',swaggerUi.serve, swaggerUi.setup(swaggerNode))
-app.use('/swaggerPython',swaggerUi.serve, swaggerUi.setup(swaggerPython))
+
+var options = {}
+app.use('/swaggerNode', swaggerUi.serveFiles(swaggerNode, options), swaggerUi.setup(swaggerNode));
+app.use('/swaggerPython', swaggerUi.serveFiles(swaggerPython, options), swaggerUi.setup(swaggerPython));
+
 app.use(errorHandler); // global error handler, fallbacks to 500
 app.use(notFound); // fallback to 404
 
