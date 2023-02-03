@@ -1,0 +1,162 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "tilte": "Api de Estatisticas do sistema",
+        "description": "Api de Estatisticas do sistema",
+        "contact": {
+            "email": "rasolive@hotmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        
+        {
+            "url": "https://app-lims-back-python.herokuapp.com",
+            "description": "PRD"
+        },{
+            "url": "http://localhost:5000",
+            "description": "Local DEV"
+        }
+    ],
+    "paths": {
+        "/health": {
+            "get": {
+                "summary": "Teste da aplicação",
+                "description": "Essa rota realiza teste da aplicação",
+                "tags": [
+                    "Health"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Aplicação no ar e acessível"
+                    },
+                    "400": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/suppliersMaterials": {
+            "get": {
+                "summary": "Dados para criar o grafico Materiais por fornecedor",
+                "description": "Esta rota disponibiliza os dados para criar o grafico Materiais por fornecedor",
+                "tags": [
+                    "Materiais por fornecedor"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Dados obtidos com sucesso"
+                    }
+                }
+            }
+        },
+        "/statusMateriais": {
+            "get": {
+                "summary": "Dados para criar o grafico Status dos Materiais",
+                "description": "Esta rota disponibiliza os dados para criar o grafico Status dos Materiais",
+                "tags": [
+                    "Status dos Materiais"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Dados obtidos com sucesso"
+                    }
+                }
+            }
+        },
+        "/statusLotes": {
+            "get": {
+                "summary": "Dados para criar o grafico Status dos Lotes",
+                "description": "Esta rota disponibiliza os dados para criar o grafico Status dos Lotes",
+                "tags": [
+                    "Status dos Lotes"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Dados obtidos com sucesso"
+                    }
+                }
+            }
+        },
+        "/prazoValidade": {
+            "get": {
+                "summary": "Dados para criar o grafico Lotes a vencer",
+                "description": "Esta rota disponibiliza os dados para criar o grafico Lotes a vencer",
+                "tags": [
+                    "Lotes a vencer"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Dados obtidos com sucesso"
+                    }
+                }
+            }
+        },
+        "/userProfiles": {
+            "get": {
+                "summary": "Dados para criar o grafico Usuários por perfil",
+                "description": "Esta rota disponibiliza os dados para criar o grafico Usuários por perfil",
+                "tags": [
+                    "Usuários por perfil"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Dados obtidos com sucesso"
+                    }
+                }
+            }
+        }
+        
+        
+    },
+    "components": {
+        "securitySchemes": {
+            "JWT": {
+                "description": "",
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    }
+}

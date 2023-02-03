@@ -26,17 +26,21 @@ exports.findOne = async (req, res, next) => {
 exports.post = async (req, res, next) => {
 
 		const user = req.user.email;
+		const name = req.body.name
+
+		try {
+			if (await Listas.findOne({'name': name})) {
+				return res.status(412).send({ error: 'List already exists' });
+			}
 	
-		const result = await create(req.body, user, Listas);
-
-		if (result.status >= 400) {
-			throw errorLog("Não foi possivel criar", INTERNALSERVERERROR);
-		}
-
-		if (result && result.message._id) {
-			return res.json(result).end();
-		} else {
-			throw errorLog("Não foi possivel criar", INTERNALSERVERERROR);
+			else {
+				const result = await create(req.body, user, Listas);
+	
+				return res.json(result).end();
+			}
+	
+		} catch (err) {
+			return res.status(400).send({ error: 'Registation failed' });
 		}
 }
 
@@ -46,6 +50,7 @@ exports.put = async (req, res, next) => {
 	const body = req.body
 
     body.user = req.user.email
+	body.name = undefined
 
 	const returnList = await update(req.params.id, body, Listas);
 

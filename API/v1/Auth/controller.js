@@ -119,7 +119,7 @@ exports.authenticate = async (req, res, next) => {
 		return res.status(400).send({ error: 'User not foud' })
 
 	if (!await bcrypt.compare(password, user.password))
-		return res.status(400).send({ error: 'invalid password' })
+		return res.status(401).send({ error: 'invalid password' })
 
 	user.password = undefined
 

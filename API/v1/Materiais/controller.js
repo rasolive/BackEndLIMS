@@ -31,6 +31,7 @@ exports.put = async (req, res, next) => {
 	const body = req.body
 
     body.user = req.user.email
+	body.cod = undefined
 
 	const returnList = await update(req.params.id, body, Materiais);
 

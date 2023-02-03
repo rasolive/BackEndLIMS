@@ -4,46 +4,54 @@ const { INTERNALSERVERERROR, BADREQUEST } = require('../../../Globals/httpErros'
 const { errorLog } = require('../../../Globals/utils');
 
 exports.findOne = async (req, res, next) => {
-	
+
 	const cnpj = req.body.cnpj || ''
 
-		try{
-					
-			 const response = await Fornecedores.findOne({'cnpj': cnpj})
-			 return res.send(response);
+	try {
 
-		}catch(err){
+		const response = await Fornecedores.findOne({ 'cnpj': cnpj })
+		return res.send(response);
 
-			return res.status(400).send({error:'failed'});
-			
-		}
+	} catch (err) {
+
+		return res.status(400).send({ error: 'failed' });
+
+	}
 
 }
 
 // POST
 exports.post = async (req, res, next) => {
+	const cnpj = req.body.cnpj || ''
 
-		const user = req.user.email;
-	
-		const result = await create(req.body, user, Fornecedores);
+	const user = req.user.email;
 
-		if (result.status >= 400) {
-			throw errorLog("Não foi possivel criar", INTERNALSERVERERROR);
+	try {
+		if (await Fornecedores.findOne({ 'cnpj': cnpj })) {
+			return res.status(412).send({ error: 'Supplier already exists' });
 		}
 
-		if (result && result.message._id) {
+		else {
+			const result = await create(req.body, user, Fornecedores);
+
 			return res.json(result).end();
-		} else {
-			throw errorLog("Não foi possivel criar", INTERNALSERVERERROR);
 		}
+
+	} catch (err) {
+		return res.status(400).send({ error: 'Registation failed' });
+	}
+
+	
 }
 
 // PUT
 exports.put = async (req, res, next) => {
-	
+
 	const body = req.body
 
-    body.user = req.user.email
+	body.user = req.user.email
+
+	body.cnpj = undefined
 
 	const returnList = await update(req.params.id, body, Fornecedores);
 
@@ -55,14 +63,14 @@ exports.put = async (req, res, next) => {
 		}
 	} catch (error) {
 		return (
-			next(errorLog("put.catch "+error, (error && error.status) ? error : INTERNALSERVERERROR))
+			next(errorLog("put.catch " + error, (error && error.status) ? error : INTERNALSERVERERROR))
 		)
 	}
 }
 
 // GET list
 exports.getList = async (req, res, next) => {
-    try {
+	try {
 		//const { tokenUser } = res.session;
 
 		const returnList = await findList({}, Fornecedores);
@@ -79,21 +87,21 @@ exports.getList = async (req, res, next) => {
 // GET by ID
 exports.getById = async (req, res, next) => {
 	try {
-		
-        const validate = [ req.params.id ];
+
+		const validate = [req.params.id];
 
 		if (!validate.every(item => Boolean(item) === true)) {
 			throw BADREQUEST;
 		}
-        
-        const options = {}
+
+		const options = {}
 		Object.assign(options, { active: true })
 		Object.assign(options, req.query || {})
-		delete options.token;        
+		delete options.token;
 
 		const returnList = await findById(req.params.id, options, Fornecedores);
-		
-        if (!returnList) return res.json({}).end();
+
+		if (!returnList) return res.json({}).end();
 
 		return res.json(returnList).end();
 
@@ -109,15 +117,15 @@ exports.getById = async (req, res, next) => {
 exports.deleteById = async (req, res, next) => {
 	try {
 
-		const validate = [ req.params.id ];
+		const validate = [req.params.id];
 
 		if (!validate.every(item => Boolean(item) === true)) {
 			throw BADREQUEST;
 		}
-		
+
 		const body = req.body
 
-    	body.user = req.user.email
+		body.user = req.user.email
 
 		const returnList = await remove(req.params.id, body, Fornecedores);
 
@@ -128,7 +136,7 @@ exports.deleteById = async (req, res, next) => {
 		}
 	} catch (error) {
 		return (
-			next(errorLog("delete.catch "+error, (error && error.status) ? error : INTERNALSERVERERROR))
+			next(errorLog("delete.catch " + error, (error && error.status) ? error : INTERNALSERVERERROR))
 		)
 	}
 }

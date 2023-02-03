@@ -1,0 +1,2290 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "tilte": "Api de Manipulação de produtos",
+        "description": "manipulação do banco de dados do LIMS",
+        "contact": {
+            "email": "rasolive@hotmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://applims-back-node.herokuapp.com/v1",
+            "description": "PRD"
+        },
+        {
+            "url": "http://localhost:8089/v1",
+            "description": "Local DEV"
+        }
+
+    ],
+    "paths": {
+        "/health": {
+            "get": {
+                "summary": "Teste da aplicação",
+                "description": "Essa rota realiza teste da aplicação",
+                "tags": [
+                    "Health"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Aplicação no ar e acessível"
+                    },
+                    "400": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/contato": {
+            "post": {
+                "summary": "Formulário de contato",
+                "description": "Essa rota realiza envio de mensagem para o administrador",
+                "tags": [
+                    "Formulário de contato"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/form"
+                            },
+                            "examples": {
+                                "usuário": {
+                                    "value": {
+                                        "msg": "mensagem",
+                                        "name": "nome",
+                                        "email": "email@email.com"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possível enviar"
+                    },
+                    "200": {
+                        "description": "Formulário enviado com sucesso"
+                    }
+                }
+            }
+        },
+        "/auth/createUser": {
+            "post": {
+                "summary": "Cadastro de Usuário",
+                "description": "Essa rota realiza o cadstro de usuário pelo próprio usuário",
+                "tags": [
+                    "Autenticação"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/users"
+                            },
+                            "examples": {
+                                "create user": {
+                                    "value": {
+                                        "email": "email@email.com",
+                                        "name": "nome",
+                                        "password": "senha",
+                                        "validPass": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel criar"
+                    },
+                    "412": {
+                        "description": "Usuário já existe"
+                    },
+                    "200": {
+                        "description": "Usuário Cadastrado com sucesso"
+                    }
+                }
+            }
+        },
+        "/auth/authenticate": {
+            "post": {
+                "summary": "Autenticação de usuário",
+                "description": "Essa rota realiza autenticação do usuário",
+                "tags": [
+                    "Autenticação"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/users"
+                            },
+                            "examples": {
+                                "usuário": {
+                                    "value": {
+                                        "email": "email@email.com",
+                                        "password": "password"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Usuário não encontrado no banco de dados"
+                    },
+                    "401": {
+                        "description": "Senha incorreta"
+                    },
+                    "200": {
+                        "description": "Usuário Autenticado com sucesso"
+                    }
+                }
+            }
+        },
+        "/email/forgotPassword": {
+            "post": {
+                "summary": "Reset de senha",
+                "description": "Essa rota realiza o envio de uma nova senha por e-mail",
+                "tags": [
+                    "Autenticação"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/users"
+                            },
+                            "examples": {
+                                "send e-mail": {
+                                    "value": {
+                                        "email": "email@email.com"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Usuário não encontrado no banco de dados"
+                    },
+                    "200": {
+                        "description": "e-mail enviado com sucesso"
+                    }
+                }
+            }
+        },
+        "/fornecedores": {
+            "post": {
+                "summary": "Cadastro de Fornecedores",
+                "description": "Essa rota realiza o cadstro de Fornecedores",
+                "tags": [
+                    "Fornecedores"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/fornecedores"
+                            },
+                            "examples": {
+                                "Criar Forneecedor": {
+                                    "value": {
+                                        "bairro": "bairro",
+                                        "cep": "00000-000",
+                                        "cidade": "cidade",
+                                        "cnpj": "00.000.000/0000-03",
+                                        "email": "email@email.com",
+                                        "estado": "SP",
+                                        "name": "nome do fornecedor",
+                                        "numero": 1,
+                                        "rua": "rua",
+                                        "telefone": "(99) 9 9999-9999"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel criar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "412": {
+                        "description": "Fornecedor já existe"
+                    },
+                    "200": {
+                        "description": "Fornecedore Cadastrado"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lista de fornecedores cadastrados",
+                "description": "Essa rota realiza a busca de fornecedores cadastrados no banco",
+                "tags": [
+                    "Fornecedores"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/fornecedores/{_id}": {
+            "get": {
+                "summary": "Busca de foencedor por \"id\"",
+                "description": "Essa rota realiza a busca de fornecedor especifico",
+                "tags": [
+                    "Fornecedores"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do fornecedor",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Cadastro de Fornecedores",
+                "description": "Essa rota realiza o cadstro de Fornecedores",
+                "tags": [
+                    "Fornecedores"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do fornecedor",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/fornecedores"
+                            },
+                            "examples": {
+                                "Criar Forneecedor": {
+                                    "value": {
+                                        "bairro": "bairro",
+                                        "cep": "00000-000",
+                                        "cidade": "cidade",
+                                        "email": "email@email.com",
+                                        "estado": "SP",
+                                        "name": "nome do fornecedor",
+                                        "numero": 1,
+                                        "rua": "rua",
+                                        "telefone": "(99) 9 9999-9999"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel atualizar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar fornecedor por \"id\"",
+                "description": "Essa rota deleta um fornecedor especifico",
+                "tags": [
+                    "Fornecedores"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do fornecedor",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/materiais": {
+            "post": {
+                "summary": "Cadastro de Materiais",
+                "description": "Essa rota realiza o cadastro de Materiais",
+                "tags": [
+                    "Materiais"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/materiais"
+                            },
+                            "examples": {
+                                "Criar Material": {
+                                    "value": {
+                                        "armazenamento": "A",
+                                        "fornecedor": [
+                                            1,
+                                            11
+                                        ],
+                                        "name": "material x",
+                                        "statusMaterial": "L",
+                                        "umb": "G"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel criar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Matrial Cadastrado com sucesso"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lista de materiais cadastrados",
+                "description": "Essa rota realiza a busca de materiais cadastrados no banco",
+                "tags": [
+                    "Materiais"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/materiais/{_id}": {
+            "get": {
+                "summary": "Busca de material por \"id\"",
+                "description": "Essa rota realiza a busca de material especifico",
+                "tags": [
+                    "Materiais"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do material",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Cadastro de Materiais",
+                "description": "Essa rota realiza o atualização de Materiais",
+                "tags": [
+                    "Materiais"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do material",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/materiais"
+                            },
+                            "examples": {
+                                "Criar Material": {
+                                    "value": {
+                                        "name": "material y"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel atualizar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar material por \"id\"",
+                "description": "Essa rota deleta um material especifico",
+                "tags": [
+                    "Materiais"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do material",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/lotes": {
+            "post": {
+                "summary": "Cadastro de Lotes",
+                "description": "Essa rota realiza o cadastro de Lotes",
+                "tags": [
+                    "Lotes"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/lotes"
+                            },
+                            "examples": {
+                                "Criar Lote": {
+                                    "value": {
+                                        "fornecedor": "1",
+                                        "loteFornecedor": "xyz",
+                                        "material": "1",
+                                        "qtdInicial": 1000,
+                                        "statusLote": "Q",
+                                        "validade": "2023-03-24"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel criar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Lote Cadastrado com sucesso"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lista de lotes cadastrados",
+                "description": "Essa rota realiza a busca de lotes cadastrados no banco",
+                "tags": [
+                    "Lotes"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/lotes/{_id}": {
+            "get": {
+                "summary": "Busca de lote por \"id\"",
+                "description": "Essa rota realiza a busca de lote especifico",
+                "tags": [
+                    "Lotes"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do lote",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Atualização de Lotes/resultados de analises",
+                "description": "Essa rota realiza atualização de dados de Lotes e inserção de resultados de analises",
+                "tags": [
+                    "Lotes"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do lote",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/lotes"
+                            },
+                            "examples": {
+                                "Atualizar Lote": {
+                                    "value": {
+                                        "qtdInicial": 2000
+                                    }
+                                },
+                                "Inserir resultados": {
+                                    "value": {
+                                        "_id": 16,
+                                        "active": true,
+                                        "material": 2,
+                                        "fornecedor": 2,
+                                        "lote": "LM1000016",
+                                        "loteFornecedor": "4535345",
+                                        "qtdInicial": 5,
+                                        "validade": "2023-03-15",
+                                        "statusLote": "L",
+                                        "analysisResult": [
+                                            {
+                                                "_id": 1,
+                                                "active": true,
+                                                "AnalysisType": "Qualitativa",
+                                                "name": "cor",
+                                                "AnalysisMethod": "MA-0002",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:12.674Z",
+                                                "updatedAt": "2022-06-28T23:06:07.520Z",
+                                                "id": 1,
+                                                "__v": 0,
+                                                "updatedBy": "rasolive@gmail.com",
+                                                "result": "A",
+                                                "status": true
+                                            },
+                                            {
+                                                "_id": 3,
+                                                "active": true,
+                                                "name": "Aparência",
+                                                "AnalysisMethod": "MA-0005",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:42.624Z",
+                                                "updatedAt": "2022-06-28T21:15:32.587Z",
+                                                "id": 3,
+                                                "__v": 0,
+                                                "AnalysisType": "Qualitativa",
+                                                "updatedBy": "rasolive@gmail.com",
+                                                "result": "A",
+                                                "status": true
+                                            },
+                                            {
+                                                "_id": 4,
+                                                "active": true,
+                                                "AnalysisType": "Quantitativa",
+                                                "name": "pH",
+                                                "AnalysisMethod": "MA-0001",
+                                                "unit": "ph",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:53.334Z",
+                                                "updatedAt": "2022-06-28T21:14:53.334Z",
+                                                "id": 4,
+                                                "__v": 0,
+                                                "min": "4",
+                                                "max": "5",
+                                                "result": "4.5",
+                                                "status": true
+                                            },
+                                            {
+                                                "_id": 6,
+                                                "active": true,
+                                                "AnalysisType": "Quantitativa",
+                                                "name": "Densidade",
+                                                "AnalysisMethod": "MA-1008",
+                                                "unit": "g/ml",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:15:25.128Z",
+                                                "updatedAt": "2022-07-01T17:51:58.096Z",
+                                                "id": 6,
+                                                "__v": 0,
+                                                "updatedBy": "rasolive@gmail.com",
+                                                "min": "0.98",
+                                                "max": "1.02",
+                                                "result": "1",
+                                                "status": true
+                                            },
+                                            {
+                                                "_id": 5,
+                                                "active": true,
+                                                "AnalysisType": "Quantitativa",
+                                                "name": "Viscosidade",
+                                                "AnalysisMethod": "MA-0003",
+                                                "unit": "cp",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:15:10.323Z",
+                                                "updatedAt": "2022-06-28T21:15:10.323Z",
+                                                "id": 5,
+                                                "__v": 0,
+                                                "min": "1000",
+                                                "max": "2000",
+                                                "result": "1500",
+                                                "status": true
+                                            }
+                                        ],
+                                        "startedAnalysis": true,
+                                        "createdBy": "rasolive@gmail.com",
+                                        "createdAt": {
+                                            "$date": "2023-01-31T14:55:19.346Z"
+                                        },
+                                        "updatedAt": {
+                                            "$date": "2023-02-03T15:12:29.967Z"
+                                        },
+                                        "__v": 0,
+                                        "updatedBy": "rasolive@gmail.com"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel atualizar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar lote por \"id\"",
+                "description": "Essa rota deleta um lote especifico",
+                "tags": [
+                    "Lotes"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do lote",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/lotes?statusLote=L": {
+            "get": {
+                "summary": "Busca de lote aprovados",
+                "description": "Essa rota realiza a busca de lotes aprovados",
+                "tags": [
+                    "Lotes"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/lotes?statusLote=R": {
+            "get": {
+                "summary": "Busca de lote reprovados",
+                "description": "Essa rota realiza a busca de lotes reprovados",
+                "tags": [
+                    "Lotes"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/lotes?vencidos=T": {
+            "get": {
+                "summary": "Busca de lote vencidos",
+                "description": "Essa rota realiza a busca de lotes vencidos",
+                "tags": [
+                    "Lotes"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/lotes?statusLote=Q": {
+            "get": {
+                "summary": "Lista de lotes em qualidade",
+                "description": "Essa rota realiza a busca de lotes em qualidade no banco",
+                "tags": [
+                    "Lotes"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/analysisMethod": {
+            "post": {
+                "summary": "Cadastro de Métodos de Analises",
+                "description": "Essa rota realiza o cadastro de Métodos de Analises",
+                "tags": [
+                    "Métodos de Analises"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/analysisMethod"
+                            },
+                            "examples": {
+                                "Criar Método": {
+                                    "value": {
+                                        "description": "nome da análise",
+                                        "process": "descrição do processo",
+                                        "ref": "referência",
+                                        "rev": 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel criar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Método Cadastrado"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lista de métodos cadastrados",
+                "description": "Essa rota realiza a busca de métodos cadastrados no banco",
+                "tags": [
+                    "Métodos de Analises"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/analysisMethod/{_id}": {
+            "get": {
+                "summary": "Busca de método por \"id\"",
+                "description": "Essa rota realiza a busca de método especifico",
+                "tags": [
+                    "Métodos de Analises"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do método",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Cadastro de Métodos de Analises",
+                "description": "Essa rota realiza o cadstro de Métodos de Analises",
+                "tags": [
+                    "Métodos de Analises"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do método",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/analysisMethod"
+                            },
+                            "examples": {
+                                "Atualizar Método": {
+                                    "value": {
+                                        "process": "nova descrição do processo"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel atualizar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar método por \"id\"",
+                "description": "Essa rota deleta um método especifico",
+                "tags": [
+                    "Métodos de Analises"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id do método",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/analysis": {
+            "post": {
+                "summary": "Cadastro de Analises",
+                "description": "Essa rota realiza o cadastro de Analises",
+                "tags": [
+                    "Analises"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/analysis"
+                            },
+                            "examples": {
+                                "Criar Analise": {
+                                    "value": {
+                                        "AnalysisMethod": "MA-0001",
+                                        "AnalysisType": "Quantitativa",
+                                        "name": "nome da analise",
+                                        "unit": "mgKOH/g"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel criar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "412": {
+                        "description": "Analise já existe"
+                    },
+                    "200": {
+                        "description": "Analise Cadastrada com sucesso"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lista de analises cadastradas",
+                "description": "Essa rota realiza a busca de analises cadastradas no banco",
+                "tags": [
+                    "Analises"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/analysis/{_id}": {
+            "get": {
+                "summary": "Busca de analise por \"id\"",
+                "description": "Essa rota realiza a busca de analise especifica",
+                "tags": [
+                    "Analises"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da analise",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Cadastro de Analises",
+                "description": "Essa rota realiza o atualização de Analises",
+                "tags": [
+                    "Analises"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da analise",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/analysis"
+                            },
+                            "examples": {
+                                "Atualizar Analise": {
+                                    "value": {
+                                        "AnalysisMethod": "MA-0002"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel atualizar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar analise por \"id\"",
+                "description": "Essa rota deleta um analise especifica",
+                "tags": [
+                    "Analises"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da analise",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/specification": {
+            "post": {
+                "summary": "Cadastro de Especificações",
+                "description": "Essa rota realiza o cadastro de Especificações",
+                "tags": [
+                    "Especificações"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/specification"
+                            },
+                            "examples": {
+                                "Criar Especificação": {
+                                    "value": {
+                                        "material": 15,
+                                        "specification": [
+                                            {
+                                                "_id": 1,
+                                                "active": true,
+                                                "AnalysisType": "Qualitativa",
+                                                "name": "cor",
+                                                "AnalysisMethod": "MA-0002",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:12.674Z",
+                                                "updatedAt": "2022-06-28T23:06:07.520Z",
+                                                "id": 1,
+                                                "__v": 0,
+                                                "updatedBy": "rasolive@gmail.com"
+                                            },
+                                            {
+                                                "_id": 2,
+                                                "active": true,
+                                                "AnalysisType": "Qualitativa",
+                                                "name": "Odor",
+                                                "AnalysisMethod": "MA-0004",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:29.731Z",
+                                                "updatedAt": "2022-06-28T21:14:29.731Z",
+                                                "id": 2,
+                                                "__v": 0
+                                            },
+                                            {
+                                                "_id": 3,
+                                                "active": true,
+                                                "name": "Aparência",
+                                                "AnalysisMethod": "MA-0005",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:42.624Z",
+                                                "updatedAt": "2022-06-28T21:15:32.587Z",
+                                                "id": 3,
+                                                "__v": 0,
+                                                "AnalysisType": "Qualitativa",
+                                                "updatedBy": "rasolive@gmail.com"
+                                            },
+                                            {
+                                                "_id": 4,
+                                                "active": true,
+                                                "AnalysisType": "Quantitativa",
+                                                "name": "pH",
+                                                "AnalysisMethod": "MA-0001",
+                                                "unit": "ph",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:53.334Z",
+                                                "updatedAt": "2022-06-28T21:14:53.334Z",
+                                                "id": 4,
+                                                "__v": 0,
+                                                "min": "4",
+                                                "max": "6"
+                                            },
+                                            {
+                                                "_id": 6,
+                                                "active": true,
+                                                "AnalysisType": "Quantitativa",
+                                                "name": "Densidade",
+                                                "AnalysisMethod": "MA-1008",
+                                                "unit": "g/ml",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:15:25.128Z",
+                                                "updatedAt": "2022-07-01T17:51:58.096Z",
+                                                "id": 6,
+                                                "__v": 0,
+                                                "updatedBy": "rasolive@gmail.com",
+                                                "min": "0.89",
+                                                "max": "1.01"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel criar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "412": {
+                        "description": "Eespecificação já existe"
+                    },
+                    "200": {
+                        "description": "Especificação Cadastrada com sucesso"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lista de especificações cadastradas",
+                "description": "Essa rota realiza a busca de especificações cadastradas no banco",
+                "tags": [
+                    "Especificações"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/specification/{_id}": {
+            "get": {
+                "summary": "Busca de especificação por \"id\"",
+                "description": "Essa rota realiza a busca de especificação especifica",
+                "tags": [
+                    "Especificações"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da especificação",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Cadastro de Especificações",
+                "description": "Essa rota realiza o cadstro de Especificações",
+                "tags": [
+                    "Especificações"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da especificação",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/specification"
+                            },
+                            "examples": {
+                                "Atualizar Especificação": {
+                                    "value": {
+                                        "specification": [
+                                            {
+                                                "_id": 1,
+                                                "active": true,
+                                                "AnalysisType": "Qualitativa",
+                                                "name": "cor",
+                                                "AnalysisMethod": "MA-0002",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:12.674Z",
+                                                "updatedAt": "2022-06-28T23:06:07.520Z",
+                                                "id": 1,
+                                                "__v": 0,
+                                                "updatedBy": "rasolive@gmail.com"
+                                            },
+                                            {
+                                                "_id": 2,
+                                                "active": true,
+                                                "AnalysisType": "Qualitativa",
+                                                "name": "Odor",
+                                                "AnalysisMethod": "MA-0004",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:29.731Z",
+                                                "updatedAt": "2022-06-28T21:14:29.731Z",
+                                                "id": 2,
+                                                "__v": 0
+                                            },
+                                            {
+                                                "_id": 3,
+                                                "active": true,
+                                                "name": "Aparência",
+                                                "AnalysisMethod": "MA-0005",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:42.624Z",
+                                                "updatedAt": "2022-06-28T21:15:32.587Z",
+                                                "id": 3,
+                                                "__v": 0,
+                                                "AnalysisType": "Qualitativa",
+                                                "updatedBy": "rasolive@gmail.com"
+                                            },
+                                            {
+                                                "_id": 4,
+                                                "active": true,
+                                                "AnalysisType": "Quantitativa",
+                                                "name": "pH",
+                                                "AnalysisMethod": "MA-0001",
+                                                "unit": "ph",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:14:53.334Z",
+                                                "updatedAt": "2022-06-28T21:14:53.334Z",
+                                                "id": 4,
+                                                "__v": 0,
+                                                "min": "4",
+                                                "max": "6"
+                                            },
+                                            {
+                                                "_id": 6,
+                                                "active": true,
+                                                "AnalysisType": "Quantitativa",
+                                                "name": "Densidade",
+                                                "AnalysisMethod": "MA-1008",
+                                                "unit": "g/ml",
+                                                "createdBy": "rasolive@gmail.com",
+                                                "createdAt": "2022-06-28T21:15:25.128Z",
+                                                "updatedAt": "2022-07-01T17:51:58.096Z",
+                                                "id": 6,
+                                                "__v": 0,
+                                                "updatedBy": "rasolive@gmail.com",
+                                                "min": "0.89",
+                                                "max": "1.01"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel atualizar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar especificação por \"id\"",
+                "description": "Essa rota deleta um especificação especifica",
+                "tags": [
+                    "Especificações"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da especificação",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/listas": {
+            "post": {
+                "summary": "Cadastro de Listas",
+                "description": "Essa rota realiza o cadastro de Listas",
+                "tags": [
+                    "Listas"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/listas"
+                            },
+                            "examples": {
+                                "Criar Lista": {
+                                    "value": {
+                                        "name": "Status Material2",
+                                        "lista": [
+                                            {
+                                                "id": "qyc0d5kfg",
+                                                "valor": "Em Criação",
+                                                "chave": "C"
+                                            },
+                                            {
+                                                "id": "b5efh01it",
+                                                "valor": "Em Linha",
+                                                "chave": "L"
+                                            },
+                                            {
+                                                "id": "wg3bunf4o",
+                                                "valor": "Fora de Uso",
+                                                "chave": "F"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel criar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "412": {
+                        "description": "Lista já existe"
+                    },
+                    "200": {
+                        "description": "lista Cadastrada"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lista de listas cadastradas",
+                "description": "Essa rota realiza a busca de listas cadastradas no banco",
+                "tags": [
+                    "Listas"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/listas/{_id}": {
+            "get": {
+                "summary": "Busca de lista por \"id\"",
+                "description": "Essa rota realiza a busca de lista especifico",
+                "tags": [
+                    "Listas"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da lista",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Atualização de Listas",
+                "description": "Essa rota realiza a atualização de Listas",
+                "tags": [
+                    "Listas"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da lista",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/listas"
+                            },
+                            "examples": {
+                                "Atualizar Lista": {
+                                    "value": {
+                                        "lista": [
+                                            {
+                                                "id": "qyc0d5kfg",
+                                                "valor": "Em Criação",
+                                                "chave": "C"
+                                            },
+                                            {
+                                                "id": "b5efh01it",
+                                                "valor": "Em Linha",
+                                                "chave": "L"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel atualizar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar lista por \"id\"",
+                "description": "Essa rota deleta uma lista especifica",
+                "tags": [
+                    "Listas"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da lista",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "post": {
+                "summary": "Cadastro de Usuários",
+                "description": "Essa rota realiza o cadastro de Usuários",
+                "tags": [
+                    "Usuários"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/users"
+                            },
+                            "examples": {
+                                "Criar Usuário": {
+                                    "value": {
+                                        "email": "email@email.com",
+                                        "name": "novo usuário",
+                                        "password": "newPass",
+                                        "role": [
+                                            {
+                                                "id": "ypwjniwa7",
+                                                "perfil": "V"
+                                            }
+                                        ],
+                                        "validPass": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel criar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "412": {
+                        "description": "Usuário já existe"
+                    },
+                    "200": {
+                        "description": "usuário Cadastrado com sucesso"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Usuário de usuários cadastrados",
+                "description": "Essa rota realiza a busca de usuários cadastrados no banco",
+                "tags": [
+                    "Usuários"
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/users/{_id}": {
+            "get": {
+                "summary": "Busca de usuário por \"id\"",
+                "description": "Essa rota realiza a busca de usuário especifico",
+                "tags": [
+                    "Usuários"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da usuário",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Atualização de Usuários",
+                "description": "Essa rota realiza a atualização de Usuários",
+                "tags": [
+                    "Usuários"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da usuário",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/users"
+                            },
+                            "examples": {
+                                "Atualizar Usuário": {
+                                    "value": {
+                                        "name": "usuário y"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Não foi possivel atualizar"
+                    },
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "Atualizado com sucesso"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar usuário por \"id\"",
+                "description": "Essa rota deleta uma usuário especifico",
+                "tags": [
+                    "Usuários"
+                ],
+                "parameters": [
+                    {
+                        "name": "_id",
+                        "in": "path",
+                        "description": "id da usuário",
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Token não disponibilizado/inválido"
+                    },
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "users": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
+                    },
+                    "name": {
+                        "type": "String",
+                        "required": true
+                    },
+                    "email": {
+                        "type": "String",
+                        "required": true,
+                        "unique": true,
+                        "lowercase": true
+                    },
+                    "password": {
+                        "type": "String",
+                        "select": false
+                    },
+                    "validPass": {
+                        "type": "Boolean"
+                    },
+                    "role": {
+                        "type": "Array",
+                        "default": {},
+                        "required": true
+                    },
+                    "createdBy": {
+                        "type": "String"
+                    },
+                    "updatedBy": {
+                        "type": "String"
+                    }
+                }
+            },
+            "form": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
+                    },
+                    "name": {
+                        "type": "String"
+                    },
+                    "email": {
+                        "type": "String"
+                    },
+                    "msg": {
+                        "type": "String"
+                    }
+                }
+            },
+            "fornecedores": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
+                    },
+                    "name": {
+                        "type": "String",
+                        "required": true
+                    },
+                    "rua": {
+                        "type": "String"
+                    },
+                    "numero": {
+                        "type": "String"
+                    },
+                    "bairro": {
+                        "type": "String"
+                    },
+                    "cidade": {
+                        "type": "String"
+                    },
+                    "estado": {
+                        "type": "String",
+                        "ref": "estados"
+                    },
+                    "cep": {
+                        "type": "String"
+                    },
+                    "telefone": {
+                        "type": "String"
+                    },
+                    "email": {
+                        "type": "String"
+                    },
+                    "cnpj": {
+                        "type": "String",
+                        "required": true,
+                        "unique": true
+                    },
+                    "createdBy": {
+                        "type": "String"
+                    },
+                    "updatedBy": {
+                        "type": "String"
+                    }
+                }
+            },
+            "materiais": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
+                    },
+                    "cod": {
+                        "type": "String",
+                        "required": true,
+                        "unique": true
+                    },
+                    "name": {
+                        "type": "String",
+                        "required": true
+                    },
+                    "armazenamento": {
+                        "type": "String",
+                        "ref": "listas",
+                        "required": true
+                    },
+                    "statusMaterial": {
+                        "type": "String",
+                        "ref": "listas",
+                        "required": true
+                    },
+                    "fornecedor": {
+                        "type": "Array",
+                        "default": {},
+                        "ref": "fornecedores"
+                    },
+                    "umb": {
+                        "type": "String",
+                        "ref": "listas",
+                        "required": true
+                    },
+                    "createdBy": {
+                        "type": "String"
+                    },
+                    "updatedBy": {
+                        "type": "String"
+                    }
+                }
+            },
+            "lotes": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
+                    },
+                    "material": {
+                        "type": "Number",
+                        "ref": "Materiais",
+                        "required": true
+                    },
+                    "fornecedor": {
+                        "type": "Number",
+                        "ref": "Suppliers",
+                        "required": true
+                    },
+                    "lote": {
+                        "type": "String",
+                        "required": true,
+                        "unique": true
+                    },
+                    "loteFornecedor": {
+                        "type": "String",
+                        "required": true
+                    },
+                    "qtdInicial": {
+                        "type": "Number",
+                        "required": true
+                    },
+                    "qtdAtual": {
+                        "type": "Number"
+                    },
+                    "unidade": {
+                        "type": "String"
+                    },
+                    "validade": {
+                        "type": "String",
+                        "required": true
+                    },
+                    "statusLote": {
+                        "type": "String",
+                        "ref": "Listas"
+                    },
+                    "analysisResult": {
+                        "type": "Array",
+                        "default": {}
+                    },
+                    "startedAnalysis": {
+                        "type": "Boolean",
+                        "default": false
+                    },
+                    "createdBy": {
+                        "type": "String"
+                    },
+                    "updatedBy": {
+                        "type": "String"
+                    }
+                }
+            },
+            "analysisMethod": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
+                    },
+                    "name": {
+                        "type": "String",
+                        "required": true,
+                        "unique": true
+                    },
+                    "description": {
+                        "type": "String"
+                    },
+                    "rev": {
+                        "type": "Number"
+                    },
+                    "process": {
+                        "type": "String"
+                    },
+                    "ref": {
+                        "type": "String"
+                    },
+                    "createdBy": {
+                        "type": "String"
+                    },
+                    "updatedBy": {
+                        "type": "String"
+                    }
+                }
+            },
+            "analysis": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "Number"
+                    },
+                    "_id": {
+                        "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
+                    },
+                    "AnalysisType": {
+                        "type": "String",
+                        "required": true
+                    },
+                    "name": {
+                        "type": "String",
+                        "required": true,
+                        "unique": true
+                    },
+                    "AnalysisMethod": {
+                        "type": "String",
+                        "ref": "AnalysisMethod",
+                        "required": true
+                    },
+                    "unit": {
+                        "type": "String",
+                        "ref": "listas"
+                    },
+                    "createdBy": {
+                        "type": "String"
+                    },
+                    "updatedBy": {
+                        "type": "String"
+                    }
+                }
+            },
+            "specification": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
+                    },
+                    "material": {
+                        "type": "Number",
+                        "ref": "Materiais",
+                        "required": true,
+                        "unique": true
+                    },
+                    "specification": {
+                        "type": "Array"
+                    },
+                    "createdBy": {
+                        "type": "String"
+                    },
+                    "updatedBy": {
+                        "type": "String"
+                    }
+                }
+            },
+            "listas": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "Number"
+                    },
+                    "active": {
+                        "type": "Boolean"
+                    },
+                    "name": {
+                        "type": "String",
+                        "required": true,
+                        "unique": true
+                    },
+                    "lista": {
+                        "type": "Array",
+                        "default": {}
+                    },
+                    "createdBy": {
+                        "type": "String"
+                    },
+                    "updatedBy": {
+                        "type": "String"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "JWT": {
+                "description": "",
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    }
+}
