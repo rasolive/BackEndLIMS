@@ -1,8 +1,8 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "tilte": "Api de Manipulação de produtos",
-        "description": "manipulação do banco de dados do LIMS",
+        "tilte": "Api de Manipulação de dados do LIMS",
+        "description": "API de manipulação do banco de dados do LIMS. Utilize a rota de autenticação de usuário juntamente com login e senha fornecidos para obter o token, necessário para cessar as rotas privadas",
         "contact": {
             "email": "rasolive@hotmail.com"
         },

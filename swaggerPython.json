@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "tilte": "Api de Estatisticas do sistema",
-        "description": "Api de Estatisticas do sistema",
+        "description": "Api de Estatisticas do sistema. Utilize a rota de autenticação de usuário em \"https://applims-back-node.herokuapp.com/swaggerNode\" juntamente com login e senha fornecidos para obter o token, necessário para cessar as rotas privadas",
         "contact": {
             "email": "rasolive@hotmail.com"
         },
