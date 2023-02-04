@@ -7,8 +7,8 @@
   "license": "MIT",
   "scripts": {
     "test": "SET NODE_ENV=local&& jest",
-    "dev": "nodemon server.js",
-    "local": "SET NODE_ENV=local&& nodemon server.js",
+    "dev": "SET NODE_ENV=local&& nodemon server.js --ignore __tests__",
+    "local": "SET NODE_ENV=local&& nodemon server.js --ignore __tests__",
     "start": "node index.js"
   },
   "devDependencies": {
