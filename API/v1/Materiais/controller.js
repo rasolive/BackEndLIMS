@@ -37,7 +37,7 @@ exports.put = async (req, res, next) => {
 
 	try {
 		if (returnList) {
-			return res.json({ _id: req.params.id, success: true }).end();
+			return res.json(returnList).end();
 		} else {
 			throw errorLog("Não foi possivel atualizar", NOTFOUND);
 		}
@@ -110,7 +110,7 @@ exports.deleteById = async (req, res, next) => {
 		const returnList = await remove(req.params.id, body, Materiais);
 
 		if (returnList) {
-			return res.json({ success: true }).end();
+			return res.json(returnList).end();
 		} else {
 			next(NOTFOUND);
 		}
