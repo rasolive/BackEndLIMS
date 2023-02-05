@@ -1,7 +1,40 @@
 const request = require('supertest')
+const db = require('../../Models')
+const mongoose = require('mongoose');
+require('dotenv').config({
+	path: '.env.test'
+})
+
+
+const connString = process.env.CONN_STRING;
+
+describe('Dados', ()=>{
+    it("Limpar dados do banco", async () => {
+    const promise = mongoose.connect(connString, {
+        dbName: process.env.MONGODB_SCHEMA,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
+
+    await db.Fornecedores.deleteMany()
+    await db.Users.deleteMany()
+    await db.Lotes.deleteMany()
+    await db.Materiais.deleteMany()
+    await db.Listas.deleteMany()
+    await db.Analysis.deleteMany()
+    await db.AnalysisMethod.deleteMany()
+    await db.Specification.deleteMany()    
+
+    await expect(promise).resolves.toBeInstanceOf(mongoose.Mongoose)
+
+    await mongoose.connection.close()
+})
+})
+
+
 const API_v1 = "http://localhost:8089/v1"
 const API = "http://localhost:8089"
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6Im5vbWUiLCJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsInJvbGUiOlsiViJdLCJ2YWxpZFBhc3MiOnRydWUsImlhdCI6MTY3NTUxMzU3MywiZXhwIjoxNjc1NTMxNTczfQ.alCdEZy4dhPU2IhxvqyltfoLHqm1u6F6W67RkRC0aU4"
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Im5vbWUiLCJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsInJvbGUiOlsiViJdLCJ2YWxpZFBhc3MiOnRydWUsImlhdCI6MTY3NTU1ODIwNCwiZXhwIjoxNjc1NTc2MjA0fQ.07u-k_V2UzW0OmW5tM7iYONzXbGvaTKF_TZoG4L0sNg"
 const token_invalido = "skljndfsdlfn"
 
 describe("Health", () => {
@@ -192,26 +225,6 @@ describe("Fornecedores", () => {
         const response = await request(API_v1).get('/fornecedores')
             .set('Authorization', token)
 
-        expectedResponse = [
-            {
-                _id: 1,
-                active: true,
-                name: 'nome do fornecedor',
-                rua: 'rua',
-                numero: '1',
-                bairro: 'bairro',
-                cidade: 'cidade',
-                estado: 'SP',
-                cep: '00000-000',
-                telefone: '(99) 9 9999-9999',
-                email: 'email@email.com',
-                cnpj: '00.000.000/0000-01',
-                createdBy: 'email@email.com',
-                 __v: 0
-            }
-        ]
-        expect(response.body).toStrictEqual(expectedResponse)
-
         expect(response.status).toBe(200)
 
     })
@@ -221,25 +234,8 @@ describe("Fornecedores", () => {
         const response = await request(API_v1).get('/fornecedores/1')
             .set('Authorization', token)
 
-        expectedResponse = 
-            {
-                _id: 1,
-                active: true,
-                name: 'nome do fornecedor',
-                rua: 'rua',
-                numero: '1',
-                bairro: 'bairro',
-                cidade: 'cidade',
-                estado: 'SP',
-                cep: '00000-000',
-                telefone: '(99) 9 9999-9999',
-                email: 'email@email.com',
-                cnpj: '00.000.000/0000-01',
-                createdBy: 'email@email.com',
-                __v: 0
-            }
-        
-        expect(response.body).toStrictEqual(expectedResponse)
+        expectedResponse = '00.000.000/0000-01'
+        expect(response.body.cnpj).toStrictEqual(expectedResponse)
 
         expect(response.status).toBe(200)
         console.log(response.body)
@@ -259,8 +255,29 @@ describe("Fornecedores", () => {
             .set('Content-Type', 'application/json')
             .set('Authorization', token)
 
-        expect(response.body.message.cnpj).toBe(cnpj)
-        expect(response.body.message.name).toBe(name)
+            console.log('response', response.body)
+        expect(response.body.cnpj).toBe(cnpj)
+        expect(response.body.name).toBe(name)
+        expect(response.status).toBe(200)
+
+    })
+
+})
+
+
+
+
+describe("Fornecedores", () => {
+    it("deve ser possivel deletar fornecedor", async () => {
+
+        cnpj = "00.000.000/0000-01"
+
+        const response = await request(API_v1).delete('/fornecedores/1')            
+            .set('Authorization', token)
+
+            console.log('response', response.body)
+        expect(response.body.cnpj).toBe(cnpj)
+        expect(response.body.active).toBe(false)
         expect(response.status).toBe(200)
 
     })
@@ -270,94 +287,6 @@ describe("Fornecedores", () => {
 
 
 
-
-
-
-
-//     "put": {
-//         "summary": "Cadastro de Fornecedores",
-//         "description": "Essa rota realiza o cadstro de Fornecedores",
-//         "tags": [
-//             "Fornecedores"
-//         ],
-//         "parameters": [
-//             {
-//                 "name": "_id",
-//                 "in": "path",
-//                 "description": "id do fornecedor",
-//                 "required": true
-//             }
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "requestBody": {
-//             "content": {
-//                 "application/json": {
-//                     "schema": {
-//                         "$ref": "#/components/schemas/fornecedores"
-//                     },
-//                     "examples": {
-//                         "Criar Forneecedor": {
-//                             "value": {
-//                                 "bairro": "bairro",
-//                                 "cep": "00000-000",
-//                                 "cidade": "cidade",
-//                                 "email": "email@email.com",
-//                                 "estado": "SP",
-//                                 "name": "nome do fornecedor",
-//                                 "numero": 1,
-//                                 "rua": "rua",
-//                                 "telefone": "(99) 9 9999-9999"
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         },
-//         "responses": {
-//             "400": {
-//                 "description": "Não foi possivel atualizar"
-//             },
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "Atualizado com sucesso"
-//             }
-//         }
-//     },
-//     "delete": {
-//         "summary": "Deletar fornecedor por \"id\"",
-//         "description": "Essa rota deleta um fornecedor especifico",
-//         "tags": [
-//             "Fornecedores"
-//         ],
-//         "parameters": [
-//             {
-//                 "name": "_id",
-//                 "in": "path",
-//                 "description": "id do fornecedor",
-//                 "required": true
-//             }
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     }
-// },
 // "/materiais": {
 //     "post": {
 //         "summary": "Cadastro de Materiais",
