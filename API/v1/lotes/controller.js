@@ -10,7 +10,7 @@ exports.post = async (req, res, next) => {
 	const user = req.user.email;
 
 	const lastRow = await Lotes.findOne().sort({ _id: -1 });
-	const lote = lastRow ? 'LM'+(lastRow._id + 1000001) : 1000001;
+	const lote = lastRow ? 'LM'+(lastRow._id + 1000001) : 'LM1000001';
 	req.body.lote = lote;
 
 	const result = await create(req.body, user, Lotes);
@@ -38,7 +38,7 @@ const returnList = await update(req.params.id, body, Lotes);
 
 try {
 	if (returnList) {
-		return res.json({ _id: req.params.id, success: true }).end();
+		return res.json(returnList).end();
 	} else {
 		throw errorLog("Não foi possivel atualizar", NOTFOUND);
 	}
@@ -126,7 +126,7 @@ try {
 	const returnList = await remove(req.params.id, body, Lotes);
 
 	if (returnList) {
-		return res.json({ success: true }).end();
+		return res.json(returnList).end();
 	} else {
 		next(NOTFOUND);
 	}
