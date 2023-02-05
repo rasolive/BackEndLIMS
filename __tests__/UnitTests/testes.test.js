@@ -34,7 +34,7 @@ describe('Dados', ()=>{
 
 const API_v1 = "http://localhost:8089/v1"
 const API = "http://localhost:8089"
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Im5vbWUiLCJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsInJvbGUiOlsiViJdLCJ2YWxpZFBhc3MiOnRydWUsImlhdCI6MTY3NTU1ODIwNCwiZXhwIjoxNjc1NTc2MjA0fQ.07u-k_V2UzW0OmW5tM7iYONzXbGvaTKF_TZoG4L0sNg"
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Im5vbWUiLCJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsInJvbGUiOlsiViJdLCJ2YWxpZFBhc3MiOnRydWUsImlhdCI6MTY3NTYwNTc4NSwiZXhwIjoxNjc1NjIzNzg1fQ.pQvf6He7SCiESObopDQ7-kZric4KIxrfPve_lysBL08"
 const token_invalido = "skljndfsdlfn"
 
 describe("Health", () => {
@@ -216,7 +216,6 @@ describe("Fornecedores", () => {
 
         expect(response.body).toStrictEqual(expectedResponse)
         expect(response.status).toBe(412)
-        console.log(response.body)
 
     })
 
@@ -238,8 +237,7 @@ describe("Fornecedores", () => {
         expect(response.body.cnpj).toStrictEqual(expectedResponse)
 
         expect(response.status).toBe(200)
-        console.log(response.body)
-
+  
     })
 
     it("deve ser possivel Alterar Cadastro do fornecedor sem alterar CNPJ", async () => {
@@ -255,13 +253,774 @@ describe("Fornecedores", () => {
             .set('Content-Type', 'application/json')
             .set('Authorization', token)
 
-            console.log('response', response.body)
         expect(response.body.cnpj).toBe(cnpj)
         expect(response.body.name).toBe(name)
         expect(response.status).toBe(200)
 
     })
 
+})
+
+describe("Materiais", () => {
+    it("deve falhar ao utilizar token inválido", async () => {
+
+        const response = await request(API_v1).post('/materiais')
+            .send({
+                "armazenamento": "A",
+                "fornecedor": [
+                    1
+                ],
+                "name": "material x",
+                "statusMaterial": "L",
+                "umb": "G"
+            })
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token_invalido)
+
+        expectedResponse = {
+            "error": "Token invalido"
+        }
+        expect(response.body).toStrictEqual(expectedResponse)
+        expect(response.status).toBe(401)
+
+    })
+    it("deve ser possivel Cadastrar Material", async () => {
+
+        const response = await request(API_v1).post('/materiais')
+            .send({
+                "armazenamento": "A",
+                "fornecedor": [
+                    1
+                ],
+                "name": "material x",
+                "statusMaterial": "L",
+                "umb": "G"
+            })
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token)
+
+        expect(response.body.message.cod).toBe('M10001')
+        expect(response.status).toBe(200)
+
+    })
+
+    it("deve listar materiais existentes", async () => {
+
+        const response = await request(API_v1).get('/materiais')
+            .set('Authorization', token)
+
+        expect(response.status).toBe(200)
+
+    })
+
+    it("deve listar material especifio", async () => {
+
+        const response = await request(API_v1).get('/materiais/1')
+            .set('Authorization', token)
+
+        expectedResponse = 'M10001'
+        expect(response.body.cod).toStrictEqual(expectedResponse)
+
+        expect(response.status).toBe(200)
+
+    })
+
+    it("deve ser possivel Alterar Cadastro do material sem alterar Codigo", async () => {
+
+        cod = "M10001"
+        const name = "material y"
+
+        const response = await request(API_v1).put('/materiais/1')
+            .send({
+                "name": name,
+                "cod": "M10002"
+            })
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token)
+
+        expect(response.body.cod).toBe(cod)
+        expect(response.body.name).toBe(name)
+        expect(response.status).toBe(200)
+
+    })
+
+})
+
+describe("Lotes", () => {
+    it("deve falhar ao utilizar token inválido", async () => {
+
+        const response = await request(API_v1).post('/lotes')
+            .send({
+                "fornecedor": "1",
+                "loteFornecedor": "xyz",
+                "material": "1",
+                "qtdInicial": 1000,
+                "statusLote": "Q",
+                "validade": "2023-03-24"
+            })
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token_invalido)
+
+        expectedResponse = {
+            "error": "Token invalido"
+        }
+        expect(response.body).toStrictEqual(expectedResponse)
+        expect(response.status).toBe(401)
+
+    })
+    it("deve ser possivel Cadastrar Fornecedor", async () => {
+
+        lote = 'LM1000001'
+
+        const response = await request(API_v1).post('/lotes')
+            .send({
+                "fornecedor": "1",
+                "loteFornecedor": "xyz",
+                "material": "1",
+                "qtdInicial": 1000,
+                "statusLote": "Q",
+                "validade": "2023-03-24"
+            })
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token)
+
+        expect(response.body.message.lote).toBe(lote)
+        expect(response.status).toBe(200)
+
+    })
+
+
+
+    it("deve listar lotes existentes", async () => {
+
+        const response = await request(API_v1).get('/lotes')
+            .set('Authorization', token)
+
+        expect(response.status).toBe(200)
+
+    })
+
+    it("deve listar lotes especifio", async () => {
+
+        const response = await request(API_v1).get('/lotes/1')
+            .set('Authorization', token)
+
+        expectedResponse = 'LM1000001'
+        expect(response.body.lote).toStrictEqual(expectedResponse)
+
+        expect(response.status).toBe(200)
+
+    })
+
+    it("deve ser possivel Alterar Cadastro do Lote sem alterar o field lote", async () => {
+
+        lote = "LM1000001"
+        const qtdInicial = 2000
+
+        const response = await request(API_v1).put('/lotes/1')
+            .send({
+                "qtdInicial": qtdInicial,
+                "lote": "LM1000002"
+            })
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token)
+
+        expect(response.body.lote).toBe(lote)
+        expect(response.body.qtdInicial).toBe(qtdInicial)
+        expect(response.status).toBe(200)
+
+    })
+
+})
+
+describe("Métodos de Analises", () => {
+    it("deve falhar ao utilizar token inválido", async () => {
+
+        const response = await request(API_v1).post('/analysisMethod')
+            .send({
+                "description": "nome da análise",
+                "process": "descrição do processo",
+                "ref": "referência",
+                "rev": 1
+            })
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token_invalido)
+
+        expectedResponse = {
+            "error": "Token invalido"
+        }
+        expect(response.body).toStrictEqual(expectedResponse)
+        expect(response.status).toBe(401)
+
+    })
+    it("deve ser possivel Cadastrar Método", async () => {
+
+        const name = 'MA-1001'
+
+        const response = await request(API_v1).post('/analysisMethod')
+            .send({
+                "description": "nome da análise",
+                "process": "descrição do processo",
+                "ref": "referência",
+                "rev": 1
+            })
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token)
+
+        expect(response.body.message.name).toBe(name)
+        expect(response.status).toBe(200)
+
+    })
+
+   it("deve listar métodos existentes", async () => {
+
+        const response = await request(API_v1).get('/analysisMethod')
+            .set('Authorization', token)
+
+        expect(response.status).toBe(200)
+
+    })
+
+    it("deve listar métodos especifio", async () => {
+
+        const response = await request(API_v1).get('/analysisMethod/1')
+            .set('Authorization', token)
+
+        expectedResponse = 'MA-1001'
+        expect(response.body.name).toStrictEqual(expectedResponse)
+
+        expect(response.status).toBe(200)
+
+    })
+
+    it("deve ser possivel Alterar Cadastro do método sem alterar name", async () => {
+
+        const name = 'MA-1001'
+        const process = "nova descrição do processo"
+
+        const response = await request(API_v1).put('/analysisMethod/1')
+            .send({
+                "process": process,
+                "name": 'MA-1002'
+            })
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token)
+
+        expect(response.body.name).toBe(name)
+        expect(response.body.process).toBe(process)
+        expect(response.status).toBe(200)
+
+    })
+
+})
+
+describe("Analises", () => {
+    it("deve falhar ao utilizar token inválido", async () => {
+
+        const response = await request(API_v1).post('/analysis')
+            .send({
+                "AnalysisMethod": "MA-0001",
+                "AnalysisType": "Quantitativa",
+                "name": "nome da analise",
+                "unit": "mgKOH/g"
+            })
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token_invalido)
+
+        expectedResponse = {
+            "error": "Token invalido"
+        }
+        expect(response.body).toStrictEqual(expectedResponse)
+        expect(response.status).toBe(401)
+
+    })
+    it("deve ser possivel Cadastrar Análise", async () => {
+
+        const name = "nome da analise"
+
+        const response = await request(API_v1).post('/analysis')
+            .send({
+                "AnalysisMethod": "MA-0001",
+                "AnalysisType": "Quantitativa",
+                "name": name,
+                "unit": "mgKOH/g"
+            })
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token)
+
+        expect(response.body.message.name).toBe(name)
+        expect(response.status).toBe(200)
+
+    })
+
+    it("deve falhar ao criar análise existente", async () => {
+
+        const name = "nome da analise"
+
+        const response = await request(API_v1).post('/analysis')
+            .send({
+                "AnalysisMethod": "MA-0001",
+                "AnalysisType": "Quantitativa",
+                "name": name,
+                "unit": "mgKOH/g"
+            })
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token)
+
+        expectedResponse = { error: 'Analysis already exists' }
+
+        expect(response.body).toStrictEqual(expectedResponse)
+        expect(response.status).toBe(412)
+
+    })
+
+    it("deve listar análises existentes", async () => {
+
+        const response = await request(API_v1).get('/analysis')
+            .set('Authorization', token)
+
+        expect(response.status).toBe(200)
+
+    })
+
+    it("deve listar análise especifica", async () => {
+
+        const response = await request(API_v1).get('/analysis/1')
+            .set('Authorization', token)
+
+        expectedResponse = "nome da analise"
+        expect(response.body.name).toStrictEqual(expectedResponse)
+
+        expect(response.status).toBe(200)
+
+    })
+
+    it("deve ser possivel Alterar Cadastro do método sem alterar name", async () => {
+
+        const name = "nome da analise"
+        const AnalysisMethod= "MA-0002"
+
+        const response = await request(API_v1).put('/analysis/1')
+            .send({
+                "AnalysisMethod": "MA-0002",
+                "name": "novo nome da analise"
+            })
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token)
+
+        expect(response.body.name).toBe(name)
+        expect(response.body.AnalysisMethod).toBe(AnalysisMethod)
+        expect(response.status).toBe(200)
+
+    })
+
+})
+
+describe("Especificações", () => {
+    it("deve falhar ao utilizar token inválido", async () => {
+
+        const response = await request(API_v1).post('/specification')
+            .send({
+                "material": 1,
+                "specification": [
+                    {
+                        "_id": 1,
+                        "active": true,
+                        "AnalysisType": "Qualitativa",
+                        "name": "cor",
+                        "AnalysisMethod": "MA-0002",
+                        "createdBy": "rasolive@gmail.com",
+                        "createdAt": "2022-06-28T21:14:12.674Z",
+                        "updatedAt": "2022-06-28T23:06:07.520Z",
+                        "id": 1,
+                        "__v": 0,
+                        "updatedBy": "rasolive@gmail.com"
+                    },
+                    {
+                        "_id": 2,
+                        "active": true,
+                        "AnalysisType": "Qualitativa",
+                        "name": "Odor",
+                        "AnalysisMethod": "MA-0004",
+                        "createdBy": "rasolive@gmail.com",
+                        "createdAt": "2022-06-28T21:14:29.731Z",
+                        "updatedAt": "2022-06-28T21:14:29.731Z",
+                        "id": 2,
+                        "__v": 0
+                    },
+                    {
+                        "_id": 3,
+                        "active": true,
+                        "name": "Aparência",
+                        "AnalysisMethod": "MA-0005",
+                        "createdBy": "rasolive@gmail.com",
+                        "createdAt": "2022-06-28T21:14:42.624Z",
+                        "updatedAt": "2022-06-28T21:15:32.587Z",
+                        "id": 3,
+                        "__v": 0,
+                        "AnalysisType": "Qualitativa",
+                        "updatedBy": "rasolive@gmail.com"
+                    },
+                    {
+                        "_id": 4,
+                        "active": true,
+                        "AnalysisType": "Quantitativa",
+                        "name": "pH",
+                        "AnalysisMethod": "MA-0001",
+                        "unit": "ph",
+                        "createdBy": "rasolive@gmail.com",
+                        "createdAt": "2022-06-28T21:14:53.334Z",
+                        "updatedAt": "2022-06-28T21:14:53.334Z",
+                        "id": 4,
+                        "__v": 0,
+                        "min": "4",
+                        "max": "6"
+                    },
+                    {
+                        "_id": 6,
+                        "active": true,
+                        "AnalysisType": "Quantitativa",
+                        "name": "Densidade",
+                        "AnalysisMethod": "MA-1008",
+                        "unit": "g/ml",
+                        "createdBy": "rasolive@gmail.com",
+                        "createdAt": "2022-06-28T21:15:25.128Z",
+                        "updatedAt": "2022-07-01T17:51:58.096Z",
+                        "id": 6,
+                        "__v": 0,
+                        "updatedBy": "rasolive@gmail.com",
+                        "min": "0.89",
+                        "max": "1.01"
+                    }
+                ]
+            }
+
+            )
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token_invalido)
+
+        expectedResponse = {
+            "error": "Token invalido"
+        }
+        expect(response.body).toStrictEqual(expectedResponse)
+        expect(response.status).toBe(401)
+
+    })
+    it("deve ser possivel Cadastrar Especificação", async () => {
+
+        const material = 1
+        const response = await request(API_v1).post('/specification')
+            .send({
+                "material": material,
+                "specification": [
+                    {
+                        "_id": 1,
+                        "active": true,
+                        "AnalysisType": "Qualitativa",
+                        "name": "cor",
+                        "AnalysisMethod": "MA-0002",
+                        "createdBy": "rasolive@gmail.com",
+                        "createdAt": "2022-06-28T21:14:12.674Z",
+                        "updatedAt": "2022-06-28T23:06:07.520Z",
+                        "id": 1,
+                        "__v": 0,
+                        "updatedBy": "rasolive@gmail.com"
+                    },
+                    {
+                        "_id": 2,
+                        "active": true,
+                        "AnalysisType": "Qualitativa",
+                        "name": "Odor",
+                        "AnalysisMethod": "MA-0004",
+                        "createdBy": "rasolive@gmail.com",
+                        "createdAt": "2022-06-28T21:14:29.731Z",
+                        "updatedAt": "2022-06-28T21:14:29.731Z",
+                        "id": 2,
+                        "__v": 0
+                    },
+                    {
+                        "_id": 3,
+                        "active": true,
+                        "name": "Aparência",
+                        "AnalysisMethod": "MA-0005",
+                        "createdBy": "rasolive@gmail.com",
+                        "createdAt": "2022-06-28T21:14:42.624Z",
+                        "updatedAt": "2022-06-28T21:15:32.587Z",
+                        "id": 3,
+                        "__v": 0,
+                        "AnalysisType": "Qualitativa",
+                        "updatedBy": "rasolive@gmail.com"
+                    },
+                    {
+                        "_id": 4,
+                        "active": true,
+                        "AnalysisType": "Quantitativa",
+                        "name": "pH",
+                        "AnalysisMethod": "MA-0001",
+                        "unit": "ph",
+                        "createdBy": "rasolive@gmail.com",
+                        "createdAt": "2022-06-28T21:14:53.334Z",
+                        "updatedAt": "2022-06-28T21:14:53.334Z",
+                        "id": 4,
+                        "__v": 0,
+                        "min": "4",
+                        "max": "6"
+                    },
+                    {
+                        "_id": 6,
+                        "active": true,
+                        "AnalysisType": "Quantitativa",
+                        "name": "Densidade",
+                        "AnalysisMethod": "MA-1008",
+                        "unit": "g/ml",
+                        "createdBy": "rasolive@gmail.com",
+                        "createdAt": "2022-06-28T21:15:25.128Z",
+                        "updatedAt": "2022-07-01T17:51:58.096Z",
+                        "id": 6,
+                        "__v": 0,
+                        "updatedBy": "rasolive@gmail.com",
+                        "min": "0.89",
+                        "max": "1.01"
+                    }
+                ]
+            }
+
+            )
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token)
+
+        expect(response.body.message.material).toBe(material)
+        expect(response.status).toBe(200)
+
+    })
+
+    it("deve falhar ao criar especificação existente", async () => {
+
+       
+        const response = await request(API_v1).post('/specification')
+            .send({
+                "material": 1,
+                "specification": [
+                    {
+                        "_id": 1,
+                        "active": true,
+                        "AnalysisType": "Qualitativa",
+                        "name": "cor",
+                        "AnalysisMethod": "MA-0002",
+                        "createdBy": "rasolive@gmail.com",
+                        "createdAt": "2022-06-28T21:14:12.674Z",
+                        "updatedAt": "2022-06-28T23:06:07.520Z",
+                        "id": 1,
+                        "__v": 0,
+                        "updatedBy": "rasolive@gmail.com"
+                    },
+                    {
+                        "_id": 2,
+                        "active": true,
+                        "AnalysisType": "Qualitativa",
+                        "name": "Odor",
+                        "AnalysisMethod": "MA-0004",
+                        "createdBy": "rasolive@gmail.com",
+                        "createdAt": "2022-06-28T21:14:29.731Z",
+                        "updatedAt": "2022-06-28T21:14:29.731Z",
+                        "id": 2,
+                        "__v": 0
+                    },
+                    {
+                        "_id": 3,
+                        "active": true,
+                        "name": "Aparência",
+                        "AnalysisMethod": "MA-0005",
+                        "createdBy": "rasolive@gmail.com",
+                        "createdAt": "2022-06-28T21:14:42.624Z",
+                        "updatedAt": "2022-06-28T21:15:32.587Z",
+                        "id": 3,
+                        "__v": 0,
+                        "AnalysisType": "Qualitativa",
+                        "updatedBy": "rasolive@gmail.com"
+                    },
+                    {
+                        "_id": 4,
+                        "active": true,
+                        "AnalysisType": "Quantitativa",
+                        "name": "pH",
+                        "AnalysisMethod": "MA-0001",
+                        "unit": "ph",
+                        "createdBy": "rasolive@gmail.com",
+                        "createdAt": "2022-06-28T21:14:53.334Z",
+                        "updatedAt": "2022-06-28T21:14:53.334Z",
+                        "id": 4,
+                        "__v": 0,
+                        "min": "4",
+                        "max": "6"
+                    },
+                    {
+                        "_id": 6,
+                        "active": true,
+                        "AnalysisType": "Quantitativa",
+                        "name": "Densidade",
+                        "AnalysisMethod": "MA-1008",
+                        "unit": "g/ml",
+                        "createdBy": "rasolive@gmail.com",
+                        "createdAt": "2022-06-28T21:15:25.128Z",
+                        "updatedAt": "2022-07-01T17:51:58.096Z",
+                        "id": 6,
+                        "__v": 0,
+                        "updatedBy": "rasolive@gmail.com",
+                        "min": "0.89",
+                        "max": "1.01"
+                    }
+                ]
+            }
+
+            )
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token)
+
+        expectedResponse = { error: 'Specification already exists' }
+
+        expect(response.body).toStrictEqual(expectedResponse)
+        expect(response.status).toBe(412)
+
+    })
+
+    it("deve listar especificaçãos existentes", async () => {
+
+        const response = await request(API_v1).get('/specification')
+            .set('Authorization', token)
+
+        expect(response.status).toBe(200)
+
+    })
+
+    it("deve listar especificação especifica", async () => {
+
+        const response = await request(API_v1).get('/specification/1')
+            .set('Authorization', token)
+
+        expectedResponse = 1
+        expect(response.body.material).toStrictEqual(expectedResponse)
+
+        expect(response.status).toBe(200)
+
+    })
+
+    it("deve ser possivel Alterar Cadastro da especificação sem alterar o material", async () => {
+
+        const material = 1
+
+        const response = await request(API_v1).put('/specification/1')
+            .send({
+                "material": 2,
+                "specification": [
+                    {
+                        "_id": 1,
+                        "active": true,
+                        "AnalysisType": "Qualitativa",
+                        "name": "cor",
+                        "AnalysisMethod": "MA-0002",
+                        "createdBy": "rasolive@gmail.com",
+                        "createdAt": "2022-06-28T21:14:12.674Z",
+                        "updatedAt": "2022-06-28T23:06:07.520Z",
+                        "id": 1,
+                        "__v": 0,
+                        "updatedBy": "rasolive@gmail.com"
+                    }
+                ]
+            })
+            .set('Content-Type', 'application/json')
+            .set('Authorization', token)
+
+        expect(response.body.material).toBe(material)
+        console.log(response.body.specification)
+        expect(response.status).toBe(200)
+
+    })
+
+})
+
+
+
+describe("Especificações", () => {
+    it("deve ser possivel deletar Especificação", async () => {
+
+        const material = 1
+
+        const response = await request(API_v1).delete('/specification/1')
+            .set('Authorization', token)
+
+        expect(response.body.material).toBe(material)
+        expect(response.body.active).toBe(false)
+        expect(response.status).toBe(200)
+
+    })
+})
+
+
+describe("Analises", () => {
+    it("deve ser possivel deletar Análise", async () => {
+
+        const name = "nome da analise"
+
+        const response = await request(API_v1).delete('/analysis/1')
+            .set('Authorization', token)
+
+        expect(response.body.name).toBe(name)
+        expect(response.body.active).toBe(false)
+        expect(response.status).toBe(200)
+
+    })
+})
+
+
+
+describe("Métodos de Analises", () => {
+    it("deve ser possivel deletar material", async () => {
+
+        const name = 'MA-1001'
+
+        const response = await request(API_v1).delete('/analysisMethod/1')
+            .set('Authorization', token)
+
+        expect(response.body.name).toBe(name)
+        expect(response.body.active).toBe(false)
+        expect(response.status).toBe(200)
+
+    })
+})
+
+
+
+describe("Lotes", () => {
+    it("deve ser possivel deletar lote", async () => {
+
+        lote = "LM1000001"
+
+        const response = await request(API_v1).delete('/lotes/1')
+            .set('Authorization', token)
+
+        expect(response.body.lote).toBe(lote)
+        expect(response.body.active).toBe(false)
+        expect(response.status).toBe(200)
+
+    })
+})
+
+
+
+describe("Materiais", () => {
+    it("deve ser possivel deletar material", async () => {
+
+        cod = "M10001"
+
+        const response = await request(API_v1).delete('/materiais/1')
+            .set('Authorization', token)
+
+        expect(response.body.cod).toBe(cod)
+        expect(response.body.active).toBe(false)
+        expect(response.status).toBe(200)
+
+    })
 })
 
 
@@ -275,7 +1034,6 @@ describe("Fornecedores", () => {
         const response = await request(API_v1).delete('/fornecedores/1')            
             .set('Authorization', token)
 
-            console.log('response', response.body)
         expect(response.body.cnpj).toBe(cnpj)
         expect(response.body.active).toBe(false)
         expect(response.status).toBe(200)
@@ -287,886 +1045,7 @@ describe("Fornecedores", () => {
 
 
 
-// "/materiais": {
-//     "post": {
-//         "summary": "Cadastro de Materiais",
-//         "description": "Essa rota realiza o cadastro de Materiais",
-//         "tags": [
-//             "Materiais"
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "requestBody": {
-//             "content": {
-//                 "application/json": {
-//                     "schema": {
-//                         "$ref": "#/components/schemas/materiais"
-//                     },
-//                     "examples": {
-//                         "Criar Material": {
-//                             "value": {
-//                                 "armazenamento": "A",
-//                                 "fornecedor": [
-//                                     1,
-//                                     11
-//                                 ],
-//                                 "name": "material x",
-//                                 "statusMaterial": "L",
-//                                 "umb": "G"
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         },
-//         "responses": {
-//             "400": {
-//                 "description": "Não foi possivel criar"
-//             },
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "Matrial Cadastrado com sucesso"
-//             }
-//         }
-//     },
-//     "get": {
-//         "summary": "Lista de materiais cadastrados",
-//         "description": "Essa rota realiza a busca de materiais cadastrados no banco",
-//         "tags": [
-//             "Materiais"
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     }
-// },
-// "/materiais/{_id}": {
-//     "get": {
-//         "summary": "Busca de material por \"id\"",
-//         "description": "Essa rota realiza a busca de material especifico",
-//         "tags": [
-//             "Materiais"
-//         ],
-//         "parameters": [
-//             {
-//                 "name": "_id",
-//                 "in": "path",
-//                 "description": "id do material",
-//                 "required": true
-//             }
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     },
-//     "put": {
-//         "summary": "Cadastro de Materiais",
-//         "description": "Essa rota realiza o atualização de Materiais",
-//         "tags": [
-//             "Materiais"
-//         ],
-//         "parameters": [
-//             {
-//                 "name": "_id",
-//                 "in": "path",
-//                 "description": "id do material",
-//                 "required": true
-//             }
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "requestBody": {
-//             "content": {
-//                 "application/json": {
-//                     "schema": {
-//                         "$ref": "#/components/schemas/materiais"
-//                     },
-//                     "examples": {
-//                         "Criar Material": {
-//                             "value": {
-//                                 "name": "material y"
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         },
-//         "responses": {
-//             "400": {
-//                 "description": "Não foi possivel atualizar"
-//             },
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "Atualizado com sucesso"
-//             }
-//         }
-//     },
-//     "delete": {
-//         "summary": "Deletar material por \"id\"",
-//         "description": "Essa rota deleta um material especifico",
-//         "tags": [
-//             "Materiais"
-//         ],
-//         "parameters": [
-//             {
-//                 "name": "_id",
-//                 "in": "path",
-//                 "description": "id do material",
-//                 "required": true
-//             }
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     }
-// },
-// "/lotes": {
-//     "post": {
-//         "summary": "Cadastro de Lotes",
-//         "description": "Essa rota realiza o cadastro de Lotes",
-//         "tags": [
-//             "Lotes"
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "requestBody": {
-//             "content": {
-//                 "application/json": {
-//                     "schema": {
-//                         "$ref": "#/components/schemas/lotes"
-//                     },
-//                     "examples": {
-//                         "Criar Lote": {
-//                             "value": {
-//                                 "fornecedor": "1",
-//                                 "loteFornecedor": "xyz",
-//                                 "material": "1",
-//                                 "qtdInicial": 1000,
-//                                 "statusLote": "Q",
-//                                 "validade": "2023-03-24"
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         },
-//         "responses": {
-//             "400": {
-//                 "description": "Não foi possivel criar"
-//             },
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "Lote Cadastrado com sucesso"
-//             }
-//         }
-//     },
-//     "get": {
-//         "summary": "Lista de lotes cadastrados",
-//         "description": "Essa rota realiza a busca de lotes cadastrados no banco",
-//         "tags": [
-//             "Lotes"
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     }
-// },
-// "/lotes/{_id}": {
-//     "get": {
-//         "summary": "Busca de lote por \"id\"",
-//         "description": "Essa rota realiza a busca de lote especifico",
-//         "tags": [
-//             "Lotes"
-//         ],
-//         "parameters": [
-//             {
-//                 "name": "_id",
-//                 "in": "path",
-//                 "description": "id do lote",
-//                 "required": true
-//             }
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     },
-//     "put": {
-//         "summary": "Atualização de Lotes/resultados de analises",
-//         "description": "Essa rota realiza atualização de dados de Lotes e inserção de resultados de analises",
-//         "tags": [
-//             "Lotes"
-//         ],
-//         "parameters": [
-//             {
-//                 "name": "_id",
-//                 "in": "path",
-//                 "description": "id do lote",
-//                 "required": true
-//             }
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "requestBody": {
-//             "content": {
-//                 "application/json": {
-//                     "schema": {
-//                         "$ref": "#/components/schemas/lotes"
-//                     },
-//                     "examples": {
-//                         "Atualizar Lote": {
-//                             "value": {
-//                                 "qtdInicial": 2000
-//                             }
-//                         },
-//                         "Inserir resultados": {
-//                             "value": {
-//                                 "_id": 16,
-//                                 "active": true,
-//                                 "material": 2,
-//                                 "fornecedor": 2,
-//                                 "lote": "LM1000016",
-//                                 "loteFornecedor": "4535345",
-//                                 "qtdInicial": 5,
-//                                 "validade": "2023-03-15",
-//                                 "statusLote": "L",
-//                                 "analysisResult": [
-//                                     {
-//                                         "_id": 1,
-//                                         "active": true,
-//                                         "AnalysisType": "Qualitativa",
-//                                         "name": "cor",
-//                                         "AnalysisMethod": "MA-0002",
-//                                         "createdBy": "rasolive@gmail.com",
-//                                         "createdAt": "2022-06-28T21:14:12.674Z",
-//                                         "updatedAt": "2022-06-28T23:06:07.520Z",
-//                                         "id": 1,
-//                                         "__v": 0,
-//                                         "updatedBy": "rasolive@gmail.com",
-//                                         "result": "A",
-//                                         "status": true
-//                                     },
-//                                     {
-//                                         "_id": 3,
-//                                         "active": true,
-//                                         "name": "Aparência",
-//                                         "AnalysisMethod": "MA-0005",
-//                                         "createdBy": "rasolive@gmail.com",
-//                                         "createdAt": "2022-06-28T21:14:42.624Z",
-//                                         "updatedAt": "2022-06-28T21:15:32.587Z",
-//                                         "id": 3,
-//                                         "__v": 0,
-//                                         "AnalysisType": "Qualitativa",
-//                                         "updatedBy": "rasolive@gmail.com",
-//                                         "result": "A",
-//                                         "status": true
-//                                     },
-//                                     {
-//                                         "_id": 4,
-//                                         "active": true,
-//                                         "AnalysisType": "Quantitativa",
-//                                         "name": "pH",
-//                                         "AnalysisMethod": "MA-0001",
-//                                         "unit": "ph",
-//                                         "createdBy": "rasolive@gmail.com",
-//                                         "createdAt": "2022-06-28T21:14:53.334Z",
-//                                         "updatedAt": "2022-06-28T21:14:53.334Z",
-//                                         "id": 4,
-//                                         "__v": 0,
-//                                         "min": "4",
-//                                         "max": "5",
-//                                         "result": "4.5",
-//                                         "status": true
-//                                     },
-//                                     {
-//                                         "_id": 6,
-//                                         "active": true,
-//                                         "AnalysisType": "Quantitativa",
-//                                         "name": "Densidade",
-//                                         "AnalysisMethod": "MA-1008",
-//                                         "unit": "g/ml",
-//                                         "createdBy": "rasolive@gmail.com",
-//                                         "createdAt": "2022-06-28T21:15:25.128Z",
-//                                         "updatedAt": "2022-07-01T17:51:58.096Z",
-//                                         "id": 6,
-//                                         "__v": 0,
-//                                         "updatedBy": "rasolive@gmail.com",
-//                                         "min": "0.98",
-//                                         "max": "1.02",
-//                                         "result": "1",
-//                                         "status": true
-//                                     },
-//                                     {
-//                                         "_id": 5,
-//                                         "active": true,
-//                                         "AnalysisType": "Quantitativa",
-//                                         "name": "Viscosidade",
-//                                         "AnalysisMethod": "MA-0003",
-//                                         "unit": "cp",
-//                                         "createdBy": "rasolive@gmail.com",
-//                                         "createdAt": "2022-06-28T21:15:10.323Z",
-//                                         "updatedAt": "2022-06-28T21:15:10.323Z",
-//                                         "id": 5,
-//                                         "__v": 0,
-//                                         "min": "1000",
-//                                         "max": "2000",
-//                                         "result": "1500",
-//                                         "status": true
-//                                     }
-//                                 ],
-//                                 "startedAnalysis": true,
-//                                 "createdBy": "rasolive@gmail.com",
-//                                 "createdAt": {
-//                                     "$date": "2023-01-31T14:55:19.346Z"
-//                                 },
-//                                 "updatedAt": {
-//                                     "$date": "2023-02-03T15:12:29.967Z"
-//                                 },
-//                                 "__v": 0,
-//                                 "updatedBy": "rasolive@gmail.com"
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         },
-//         "responses": {
-//             "400": {
-//                 "description": "Não foi possivel atualizar"
-//             },
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "Atualizado com sucesso"
-//             }
-//         }
-//     },
-//     "delete": {
-//         "summary": "Deletar lote por \"id\"",
-//         "description": "Essa rota deleta um lote especifico",
-//         "tags": [
-//             "Lotes"
-//         ],
-//         "parameters": [
-//             {
-//                 "name": "_id",
-//                 "in": "path",
-//                 "description": "id do lote",
-//                 "required": true
-//             }
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     }
-// },
-// "/lotes?statusLote=L": {
-//     "get": {
-//         "summary": "Busca de lote aprovados",
-//         "description": "Essa rota realiza a busca de lotes aprovados",
-//         "tags": [
-//             "Lotes"
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     }
-// },
-// "/lotes?statusLote=R": {
-//     "get": {
-//         "summary": "Busca de lote reprovados",
-//         "description": "Essa rota realiza a busca de lotes reprovados",
-//         "tags": [
-//             "Lotes"
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     }
-// },
-// "/lotes?vencidos=T": {
-//     "get": {
-//         "summary": "Busca de lote vencidos",
-//         "description": "Essa rota realiza a busca de lotes vencidos",
-//         "tags": [
-//             "Lotes"
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     }
-// },
-// "/lotes?statusLote=Q": {
-//     "get": {
-//         "summary": "Lista de lotes em qualidade",
-//         "description": "Essa rota realiza a busca de lotes em qualidade no banco",
-//         "tags": [
-//             "Lotes"
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     }
-// },
-// "/analysisMethod": {
-//     "post": {
-//         "summary": "Cadastro de Métodos de Analises",
-//         "description": "Essa rota realiza o cadastro de Métodos de Analises",
-//         "tags": [
-//             "Métodos de Analises"
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "requestBody": {
-//             "content": {
-//                 "application/json": {
-//                     "schema": {
-//                         "$ref": "#/components/schemas/analysisMethod"
-//                     },
-//                     "examples": {
-//                         "Criar Método": {
-//                             "value": {
-//                                 "description": "nome da análise",
-//                                 "process": "descrição do processo",
-//                                 "ref": "referência",
-//                                 "rev": 1
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         },
-//         "responses": {
-//             "400": {
-//                 "description": "Não foi possivel criar"
-//             },
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "Método Cadastrado"
-//             }
-//         }
-//     },
-//     "get": {
-//         "summary": "Lista de métodos cadastrados",
-//         "description": "Essa rota realiza a busca de métodos cadastrados no banco",
-//         "tags": [
-//             "Métodos de Analises"
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     }
-// },
-// "/analysisMethod/{_id}": {
-//     "get": {
-//         "summary": "Busca de método por \"id\"",
-//         "description": "Essa rota realiza a busca de método especifico",
-//         "tags": [
-//             "Métodos de Analises"
-//         ],
-//         "parameters": [
-//             {
-//                 "name": "_id",
-//                 "in": "path",
-//                 "description": "id do método",
-//                 "required": true
-//             }
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     },
-//     "put": {
-//         "summary": "Cadastro de Métodos de Analises",
-//         "description": "Essa rota realiza o cadstro de Métodos de Analises",
-//         "tags": [
-//             "Métodos de Analises"
-//         ],
-//         "parameters": [
-//             {
-//                 "name": "_id",
-//                 "in": "path",
-//                 "description": "id do método",
-//                 "required": true
-//             }
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "requestBody": {
-//             "content": {
-//                 "application/json": {
-//                     "schema": {
-//                         "$ref": "#/components/schemas/analysisMethod"
-//                     },
-//                     "examples": {
-//                         "Atualizar Método": {
-//                             "value": {
-//                                 "process": "nova descrição do processo"
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         },
-//         "responses": {
-//             "400": {
-//                 "description": "Não foi possivel atualizar"
-//             },
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "Atualizado com sucesso"
-//             }
-//         }
-//     },
-//     "delete": {
-//         "summary": "Deletar método por \"id\"",
-//         "description": "Essa rota deleta um método especifico",
-//         "tags": [
-//             "Métodos de Analises"
-//         ],
-//         "parameters": [
-//             {
-//                 "name": "_id",
-//                 "in": "path",
-//                 "description": "id do método",
-//                 "required": true
-//             }
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     }
-// },
-// "/analysis": {
-//     "post": {
-//         "summary": "Cadastro de Analises",
-//         "description": "Essa rota realiza o cadastro de Analises",
-//         "tags": [
-//             "Analises"
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "requestBody": {
-//             "content": {
-//                 "application/json": {
-//                     "schema": {
-//                         "$ref": "#/components/schemas/analysis"
-//                     },
-//                     "examples": {
-//                         "Criar Analise": {
-//                             "value": {
-//                                 "AnalysisMethod": "MA-0001",
-//                                 "AnalysisType": "Quantitativa",
-//                                 "name": "nome da analise",
-//                                 "unit": "mgKOH/g"
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         },
-//         "responses": {
-//             "400": {
-//                 "description": "Não foi possivel criar"
-//             },
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "412": {
-//                 "description": "Analise já existe"
-//             },
-//             "200": {
-//                 "description": "Analise Cadastrada com sucesso"
-//             }
-//         }
-//     },
-//     "get": {
-//         "summary": "Lista de analises cadastradas",
-//         "description": "Essa rota realiza a busca de analises cadastradas no banco",
-//         "tags": [
-//             "Analises"
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     }
-// },
-// "/analysis/{_id}": {
-//     "get": {
-//         "summary": "Busca de analise por \"id\"",
-//         "description": "Essa rota realiza a busca de analise especifica",
-//         "tags": [
-//             "Analises"
-//         ],
-//         "parameters": [
-//             {
-//                 "name": "_id",
-//                 "in": "path",
-//                 "description": "id da analise",
-//                 "required": true
-//             }
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     },
-//     "put": {
-//         "summary": "Cadastro de Analises",
-//         "description": "Essa rota realiza o atualização de Analises",
-//         "tags": [
-//             "Analises"
-//         ],
-//         "parameters": [
-//             {
-//                 "name": "_id",
-//                 "in": "path",
-//                 "description": "id da analise",
-//                 "required": true
-//             }
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "requestBody": {
-//             "content": {
-//                 "application/json": {
-//                     "schema": {
-//                         "$ref": "#/components/schemas/analysis"
-//                     },
-//                     "examples": {
-//                         "Atualizar Analise": {
-//                             "value": {
-//                                 "AnalysisMethod": "MA-0002"
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         },
-//         "responses": {
-//             "400": {
-//                 "description": "Não foi possivel atualizar"
-//             },
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "Atualizado com sucesso"
-//             }
-//         }
-//     },
-//     "delete": {
-//         "summary": "Deletar analise por \"id\"",
-//         "description": "Essa rota deleta um analise especifica",
-//         "tags": [
-//             "Analises"
-//         ],
-//         "parameters": [
-//             {
-//                 "name": "_id",
-//                 "in": "path",
-//                 "description": "id da analise",
-//                 "required": true
-//             }
-//         ],
-//         "security": [
-//             {
-//                 "JWT": []
-//             }
-//         ],
-//         "responses": {
-//             "401": {
-//                 "description": "Token não disponibilizado/inválido"
-//             },
-//             "200": {
-//                 "description": "ok"
-//             }
-//         }
-//     }
-// },
+
 // "/specification": {
 //     "post": {
 //         "summary": "Cadastro de Especificações",
