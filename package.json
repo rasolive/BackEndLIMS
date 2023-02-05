@@ -6,7 +6,7 @@
   "author": "rasolive",
   "license": "MIT",
   "scripts": {
-    "test": "SET NODE_ENV=local&& jest",
+    "test": "SET NODE_ENV=local&& jest --watch",
     "dev": "SET NODE_ENV=local&& nodemon server.js --ignore __tests__",
     "local": "SET NODE_ENV=local&& nodemon server.js --ignore __tests__",
     "start": "node index.js"
