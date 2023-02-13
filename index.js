@@ -11,7 +11,9 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerNode = require('./swaggerNode.json')
 const swaggerPython = require('./swaggerPython.json')
 //const compression = require('compression');
-require('dotenv').config()
+require('dotenv').config({
+	path: process.env.NODE_ENV === 'local' ? '.env.test' : '.env'
+})
 
 // Constants
 const PORT = process.env.PORT || 8089;

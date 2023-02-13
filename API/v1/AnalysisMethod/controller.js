@@ -31,12 +31,13 @@ exports.put = async (req, res, next) => {
 	const body = req.body
 
     body.user = req.user.email
+	body.name = undefined
 
 	const returnList = await update(req.params.id, body, AnalysisMethod);
 
 	try {
 		if (returnList) {
-			return res.json({ _id: req.params.id, success: true }).end();
+			return res.json(returnList).end();
 		} else {
 			throw errorLog("Não foi possivel atualizar", NOTFOUND);
 		}
@@ -109,7 +110,7 @@ exports.deleteById = async (req, res, next) => {
 		const returnList = await remove(req.params.id, body, AnalysisMethod);
 
 		if (returnList) {
-			return res.json({ success: true }).end();
+			return res.json(returnList).end();
 		} else {
 			next(NOTFOUND);
 		}
