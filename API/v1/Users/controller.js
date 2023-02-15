@@ -25,7 +25,7 @@ exports.getRoles = async (req, res, next) => {
 
 exports.findOne = async (req, res, next) => {
 
-	const email = req.user.email
+	const email = req.body.email
 
 	try {
 		const response = await Users.findOne({ email })
